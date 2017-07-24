@@ -1,5 +1,8 @@
 package brown.prediction;
 
+import java.util.Map;
+
+import brown.generatepredictions.Price;
 import brown.interfaces.IPricePrediction;
 
 
@@ -25,6 +28,18 @@ public class PointPrediction implements IPricePrediction {
   @Override
   public void setPrediction(GoodPrice aPrediction) {
     this.predictions.add(aPrediction);
+  }
+
+  @Override
+  public Map<Good, Price> getMeanPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Map<Good, Price> getRandomPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
   

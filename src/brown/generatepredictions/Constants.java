@@ -3,6 +3,7 @@ package brown.generatepredictions;
 import java.util.HashSet;
 import java.util.Set;
 
+import brown.agent.Agent;
 import brown.prediction.Good;
 
 public abstract class Constants {

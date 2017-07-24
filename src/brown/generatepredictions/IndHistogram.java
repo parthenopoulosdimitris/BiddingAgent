@@ -140,23 +140,7 @@ private Set<Price> _priceSet;
 	}
 	
 	
-	@Override
-	public Iterator<T> iterator(){
-		return new Iterator<T>(){
-			@Override
-			public boolean hasNext(){
-				return (_hist.hasNext());
-			}
-			@Override
-			public <Map<Price, double>>next(){
-				return (_hist.next());
-			}
-			@Override
-			public void remove(){
-				
-			}
-		};
-	}
+
 	/*
 	 * This methods returns the distribution of probabilities for each good in the form of
 	 * an array.

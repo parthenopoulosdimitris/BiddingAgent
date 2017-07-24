@@ -1,6 +1,9 @@
 package brown.generatepredictions;
 
+import java.util.Map;
+
 import brown.interfaces.IJointPrediction;
+import brown.prediction.Good;
 import brown.prediction.GoodPrice;
 import brown.prediction.PredictionVector;
 
@@ -40,6 +43,18 @@ public class JointHistogram implements IJointPrediction {
   public void setPrediction(GoodPrice aPrediction) {
     // TODO Auto-generated method stub
     
+  }
+
+  @Override
+  public Map<Good, Price> getMeanPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+
+  @Override
+  public Map<Good, Price> getRandomPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
   }
 
 }
