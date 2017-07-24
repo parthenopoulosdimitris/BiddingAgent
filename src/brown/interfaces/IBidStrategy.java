@@ -1,8 +1,12 @@
 package brown.interfaces;
 
+import java.util.Map;
+
+import brown.generatepredictions.Price;
+import brown.prediction.Good;
 import brown.prediction.PredictionVector;
 
 public interface IBidStrategy {
 	
-	public PredictionVector getBids();
+	public Map<Good,Price> getBids();
 }

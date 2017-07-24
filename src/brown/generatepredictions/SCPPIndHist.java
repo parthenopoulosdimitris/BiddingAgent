@@ -1,10 +1,12 @@
 package brown.generatepredictions;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import brown.interfaces.IBidStrategy;
 import brown.interfaces.IPredictionStrategy;
 import brown.interfaces.IPricePrediction;
+import brown.prediction.Good;
 
 public class SCPPIndHist implements IPredictionStrategy {
 	 double alpha =0.1;
@@ -14,40 +16,40 @@ public class SCPPIndHist implements IPredictionStrategy {
 	 IPricePrediction pricePrediction = null;
 	 
 	 public SCPPIndHist(IBidStrategy bs){
-		 IPricePrediction pp = new IndHistogram(Constants.NUM_GOODS);
+		 IndHistogram pp = new IndHistogram(Constants.NUM_GOODS);
 		 pp.normalize();
-		 IPricePrediction temp = new IndHistogram(Constants.NUM_GOODS);
+		 IndHistogram temp = new IndHistogram(Constants.NUM_GOODS);
 		 for (int i=1; i<NUM_ITERATIONS; i++){
-			 temp.clear();
-			 temp=populateTemp(temp, bs);
+			 temp.getMap().clear();
+			 temp=populateTemp(bs);
 			 pp=this.smooth(pp,temp);
 		 }
 		 pricePrediction=pp;
 	 }
-	 private IndHistogram populateTemp(IPricePrediction pp, IBidStrategy bs){
-		 IPricePrediction temp = new IndHistogram(Constants.NUM_GOODS);
+	 private IndHistogram populateTemp(IBidStrategy bs){
+		 IndHistogram temp = new IndHistogram(Constants.NUM_GOODS);
 		 for(int j=1; j<NUM_SAMPLES; j++){
 			 for(int l=1; l<Constants.NUM_AGENTS; l++){
-				 Map<Good,Price> bids =bs.getBids();//PSeudocode has bb.getBids(pp) 
+				 Map<Good,Price> bids = bs.getBids();
 				 for(Good good:bids.keySet()){
-					 double priceValue =temp.getBucket(good, bids.get(good));
+					 double priceValue =temp.getBucket(good, bids.get(good).getPrice()).getPrice();
 					 Price price = new Price(priceValue);
 					 temp.incCount(good,price);
 				 }
 			 }
 		 }
-		 return temp.normalize();
+		 temp.normalize();
+		 return temp;
 	 }
 	 
 	 private IndHistogram smooth(IndHistogram pp, IndHistogram temp){
-		 for(Good good:pp.getMap().keySet()){ //I changed this from pp.keySet() to pp.getMap().keySet()
-			 for(Map<Price,Double> probs:pp.getMap().get(good)){
-				 for(Price price:probs.keySet()){
-					 double newProb =(1.0-alpha)*pp.getMap().get(good).get(price)+alpha*temp.getMap().get(good).get(price);
-					 pp.put(good).put(price,newProb);
-				 }
-				 
-			 }
+		 for(Good good:pp.getMap().keySet()){ 
+			for(Price price:pp.getMap().get(good).keySet()){
+				double newProb =(1.0-alpha)*pp.getMap().get(good).get(price)+alpha*temp.getMap().get(good).get(price);
+				Map<Price,Double> newProbMap = new HashMap<Price, Double>();
+				 newProbMap.put(price,newProb);
+				 pp.getMap().put(good, newProbMap);
+			}	 
 		 }
 		 return pp;
 	 }
@@ -55,13 +57,13 @@ public class SCPPIndHist implements IPredictionStrategy {
 	 private double testConvergnce(IndHistogram pp, IndHistogram temp){
 		 Double error = Double.NEGATIVE_INFINITY;
 		 Double totalError=0.0;
-		 for(Map<Price,Double> probs:pp){
-			 for(Price price:probs.keySet()){
-				 error=max(error, abs(pp.get(good).get(price)-temp.get(good).get(price)));
+		 for(Good good: pp.getMap().keySet()){
+			 for(Price price:pp.getMap().get(good).keySet()){
+				 error=	Math.max(error, Math.abs(pp.getMap().get(good).get(price)-temp.getMap().get(good).get(price)));
 			 }
 			 totalError+=error;
 		 }
-		 totalError/=pp.size();
+		 totalError/=pp.getMap().size();
 		 return totalError;
 	 }
 	 

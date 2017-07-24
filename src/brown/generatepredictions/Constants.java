@@ -3,6 +3,8 @@ package brown.generatepredictions;
 import java.util.HashSet;
 import java.util.Set;
 
+import brown.prediction.Good;
+
 public abstract class Constants {
 	static final int NUM_GOODS = 8; 
 	static final int NUM_PRICES = 100;

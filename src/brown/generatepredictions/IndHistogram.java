@@ -17,6 +17,11 @@ public class IndHistogram implements IIndependentPrediction {
 
 private Map<Good, Map<Price, Double>> _hist;
 private Set<Price> _priceSet;
+/*
+ * The constructor for IndHist. Contains an argument representing the number of Goods that are being auctioned at the same time.
+ * The constructor populates a Map, with Key the different goods that are being auctioned and Valuem the different prices
+ * for the good, and the probability that the bidder has that price as Valuation.
+ */
 	public IndHistogram(int numGoods){
 		  _priceSet = new HashSet<Price>();
 		 double range =Constants.MAX_VAL- Constants.MIN_VAL;
@@ -38,21 +43,25 @@ private Set<Price> _priceSet;
 			 _hist.put(good,initialCounts);
 		 }
 	}
-	
+	// This method returns the bucket Price for a bid.
 	public Price getBucket(Good g, double bid){
 		Price bucketPrice= new Price(Math.max(Constants.MIN_VAL, Math.min(Constants.MAX_VAL, Math.round(bid))));
 		return bucketPrice;
 	}
-	
+	//This method increases the Count for a specific Price of a specific Good by 1.0 and updates the histogram.
 	public void incCount(Good good, Price price){
 		Map<Price, Double> innerMap = new HashMap<Price, Double>();
 		innerMap.put(price, _hist.get(good).get(price)+1.0);
 		_hist.put(good, innerMap);
 	}
+
+	public void normalize(){
+		for(Good good:_hist.keySet()){
+			_hist.put(good,normalize(_hist.get(good)));
+		}
+	}
 	
-	
-	@Override
-	public Map<Price, Double> normalize(Map<Price, Double> toNormalize){
+	private Map<Price, Double> normalize(Map<Price, Double> toNormalize){
 		Map<Price, Double> normalized = new HashMap<Price,Double>();
 		double total =0.0;
 		for(Price price:_priceSet){
@@ -80,12 +89,12 @@ private Set<Price> _priceSet;
 			Double meanPrice = 0.0;
 			while(priceIterator.hasNext()){
 				Price nextPrice = priceIterator.next();
-				meanPrice += nextPrice.getValue() * priceSet.get(nextPrice); 
-				mean.setValue(meanPrice);
-				priceIterator.remove(); //Check whether this line is necessary
+				meanPrice += nextPrice.getPrice() * priceSet.get(nextPrice); 
+				mean.setPrice(meanPrice);
+				priceIterator.remove(); 
 			}
 			meanPricePrediction.put(nextGood, mean);
-			goodIterator.remove(); //Check whether this line is necessary.
+			goodIterator.remove(); 
 		}
 		return meanPricePrediction;
 	}
@@ -104,12 +113,12 @@ private Set<Price> _priceSet;
 			Map<Price, Double> priceSet = _hist.get(nextGood);
 			Iterator<Price> priceIterator=priceSet.keySet().iterator();
 			Price priceOne = priceIterator.next();
-			increasingProbs[0]=priceOne.getValue();
-			increasedProbsMap.put(priceOne.getValue(),priceOne);
+			increasingProbs[0]=priceOne.getPrice();
+			increasedProbsMap.put(priceOne.getPrice(),priceOne);
 			int counter =1;
 			while(priceIterator.hasNext()){
 				Price nextPrice=priceIterator.next();
-				increasingProbs[counter]=nextPrice.getValue()+increasingProbs[counter-1];
+				increasingProbs[counter]=nextPrice.getPrice()+increasingProbs[counter-1];
 				increasedProbsMap.put(increasingProbs[counter], nextPrice);
 				counter+=1;
 			}
