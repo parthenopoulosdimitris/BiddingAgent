@@ -1,4 +1,6 @@
-package generatePredictions;
+package brown.generatepredictions;
+
+import generatePredictions.Price;
 
 import java.util.Map;
 
