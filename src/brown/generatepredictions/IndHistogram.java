@@ -25,7 +25,7 @@ private Set<Price> _priceSet;
 		 for (double i=Constants.MIN_VAL; i<Constants.MAX_VAL +1; i+=step ){
 			 _priceSet.add(j);
 		 }
-		 for(Good good:Constants.goodSet){
+		 for(Good good:Constants.goodSet) {
 			 Map<Price, Double> initialCounts = new HashMap<Price, Double>();
 			 for (Price price:_priceSet){
 				 initialCounts.put(price, 1.0);

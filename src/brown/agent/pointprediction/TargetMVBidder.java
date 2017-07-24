@@ -8,6 +8,7 @@ import brown.agent.library.SimpleAgent;
 import brown.assets.value.FullType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
+import brown.prediction.Good;
 import brown.prediction.GoodPrice;
 import brown.prediction.PointPrediction;
 import brown.prediction.PredictionVector;
@@ -44,7 +45,12 @@ public class TargetMVBidder extends SimpleAgent {
     aPrediction = new PointPrediction();
     PredictionVector prediction = aPrediction.getPrediction();
     for(FullType f : this.allGoods) {
-      GoodPrice good = new GoodPrice(f, 3.0);
+      Good g = new Good(f.ID);
+      GoodPrice good = new GoodPrice(g, 3.0);
+      //ideally: 
+      // create new PP strategy object, and then
+      // generate PP with SCPP- 
+      //bid based on this PP strategy. 
       aPrediction.setPrediction(good);
     }
     //initialize map of the goods to be bid. 
@@ -57,14 +63,14 @@ public class TargetMVBidder extends SimpleAgent {
     for (Valuation types : acq) {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
-        if(types.contains(p.getGood())) {
+        if(types.contains(p.getGood().toFullType())) {
           //calculate the marginal value of the good.
           Double biddingPrice = calculateMarginalValue(p, prediction);
-          toBid.put(p.getGood(), biddingPrice);
+          toBid.put(p.getGood().toFullType(), biddingPrice);
         }
         else {
           //if not, put negligibly small bid (hack: may change this to 0)
-          toBid.put(p.getGood(), 0.000001);
+          toBid.put(p.getGood().toFullType(), 0.000001);
         }
       }
       //we only need one
@@ -101,7 +107,7 @@ public class TargetMVBidder extends SimpleAgent {
         //if the bundle contains this particular good, subtract the 
         //value of the good from value. Upon iteration this will give a 
         //utility for the given bundle.
-        if(aVal.contains(p.getGood())) 
+        if(aVal.contains(p.getGood().toFullType())) 
         value -= p.getPrice();
       }
       copy.add(aVal.getGoods(), value);
@@ -156,10 +162,10 @@ public class TargetMVBidder extends SimpleAgent {
     Double optimalVal = optimalFreeGood.getPrice();
     Double optimalVal2 = optimalSansGood.getPrice();
     for(GoodPrice g : aVec) {
-      if (optimalFreeGood.contains(g.getGood())) {
+      if (optimalFreeGood.contains(g.getGood().toFullType())) {
         optimalVal -= g.getPrice();
       }
-      if (optimalSansGood.contains(g.getGood())) {
+      if (optimalSansGood.contains(g.getGood().toFullType())) {
         optimalVal2 -= g.getPrice();
       }
     }

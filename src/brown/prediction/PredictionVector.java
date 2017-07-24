@@ -4,39 +4,38 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import brown.assets.value.FullType;
 
 public class PredictionVector implements Iterable<GoodPrice> {
   
-  private Map<FullType, Double> priceMap;
+  private Map<Good, Double> priceMap;
   
   public PredictionVector() {
-    this.priceMap = new HashMap<FullType, Double>();
+    this.priceMap = new HashMap<Good, Double>();
   }
   
   
   public PredictionVector (PredictionVector p) {
-    this.priceMap = new HashMap<FullType, Double>();
+    this.priceMap = new HashMap<Good, Double>();
     this.addAll(p);
   }
   
-  public PredictionVector(Map<FullType, Double> aMap) {
-    this.priceMap = new HashMap<FullType, Double>(aMap);
+  public PredictionVector(Map<Good, Double> aMap) {
+    this.priceMap = new HashMap<Good, Double>(aMap);
     }
   
   public void add(GoodPrice val) {
     priceMap.put(val.getGood(), val.getPrice());
   }
   
-  public void add(FullType good, Double price) {
+  public void add(Good good, Double price) {
     priceMap.put(good, price);
   }
   
   public void clear() {
-    priceMap = new HashMap<FullType, Double>();
+    priceMap = new HashMap<Good, Double>();
   }
   
-  public Boolean contains(FullType good) {
+  public Boolean contains(Good good) {
     return priceMap.containsKey(good);
   }
   
@@ -44,11 +43,11 @@ public class PredictionVector implements Iterable<GoodPrice> {
     return priceMap.containsKey(aGood.getGood());
   }
   
-  public GoodPrice getGoodPrice(FullType good) {
+  public GoodPrice getGoodPrice(Good good) {
     return new GoodPrice(good, priceMap.get(good));
   }
   
-  public Double getOrDefault(FullType good, Double defVal) {
+  public Double getOrDefault(Good good, Double defVal) {
     if(priceMap.containsKey(good)) {
       return priceMap.get(good);
     }
@@ -61,7 +60,7 @@ public class PredictionVector implements Iterable<GoodPrice> {
     return (priceMap.isEmpty());
   }
   
-  public void addAll(Map<FullType, Double> goods) {
+  public void addAll(Map<Good, Double> goods) {
     priceMap.putAll(goods);
   }
   
@@ -82,7 +81,7 @@ public class PredictionVector implements Iterable<GoodPrice> {
   public GoodPrice[] toArray() {
     GoodPrice[] priceArray = new GoodPrice[this.size()];
     int i = 0; 
-    for(FullType good : priceMap.keySet()) {
+    for(Good good : priceMap.keySet()) {
       priceArray[i] = this.getGoodPrice(good);
       i++;
     }

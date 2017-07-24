@@ -7,6 +7,7 @@ import brown.agent.library.SimpleAgent;
 import brown.assets.value.FullType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
+import brown.prediction.Good;
 import brown.prediction.GoodPrice;
 import brown.prediction.PointPrediction;
 import brown.prediction.PredictionVector;
@@ -42,7 +43,8 @@ public class TargetPriceBidder extends SimpleAgent {
   public void onSimpleOpenOutcry(SimpleAuction market) {
     aPrediction = new PointPrediction();
     for(FullType f : this.allGoods) {
-      GoodPrice good = new GoodPrice(f, 3.0);
+      Good g = new Good(f.ID);
+      GoodPrice good = new GoodPrice(g, 3.0);
       aPrediction.setPrediction(good);
     }
     //map of the goods to be bid. 
@@ -56,11 +58,11 @@ public class TargetPriceBidder extends SimpleAgent {
       //for every good in the prediction vector.
       for (GoodPrice p : aPrediction.getPrediction()) {
         //if the good is in the optimal bundle, add it to toBid
-        if(types.contains(p.getGood())) {
-          toBid.put(p.getGood(), p.getPrice());
+        if(types.contains(p.getGood().toFullType())) {
+          toBid.put(p.getGood().toFullType(), p.getPrice());
         }
         else {
-          toBid.put(p.getGood(), 0.000001);
+          toBid.put(p.getGood().toFullType(), 0.000001);
         }
       }
       //we only need one
@@ -96,7 +98,7 @@ public class TargetPriceBidder extends SimpleAgent {
         //if the bundle contains this particular good, subtract the 
         //value of the good from value. Upon iteration this will give a 
         //utility for the given bundle.
-        if(aVal.contains(p.getGood())) 
+        if(aVal.contains(p.getGood().toFullType())) 
         value -= p.getPrice();
       }
       copy.add(aVal.getGoods(), value);

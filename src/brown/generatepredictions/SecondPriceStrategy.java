@@ -8,7 +8,7 @@ import brown.interfaces.IPredictionStrategy;
 public class SecondPriceStrategy implements IPredictionStrategy {
 private Double[] _estimatePrices;
 
-	public SecondPriceStrategy(ValuationBundle valuations){
+	public SecondPriceStrategy(Map<Set<FullType>, Double> valuations){
 		Double[] estimatePrices = new Double[valuations.size()];
 		for (int i=0; i<valuations.size(); i++){
 			estimatePrices[i]=valuations.values().iterator().next() - 5; 
