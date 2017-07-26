@@ -1,5 +1,10 @@
 package brown.interfaces; 
 
-public class IHistogram {
+/**
+ * Interface for a Histogram.
+ * @author acoggins
+ *
+ */
+public interface IHistogram {
   
 }

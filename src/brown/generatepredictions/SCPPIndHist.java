@@ -4,11 +4,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import brown.interfaces.IBidStrategy;
+import brown.interfaces.IIndependentPrediction;
 import brown.interfaces.IPredictionStrategy;
 import brown.interfaces.IPricePrediction;
 import brown.prediction.Good;
+import brown.prediction.GoodPriceVector;
+import brown.prediction.IndependentHistogram;
 
-public class SCPPIndHist implements IPredictionStrategy {
+public class SCPPIndHist implements IIndependentPrediction {
 	 double alpha =0.1;
 	 double eps=0.1;
 	 int NUM_ITERATIONS=100;
@@ -68,8 +71,23 @@ public class SCPPIndHist implements IPredictionStrategy {
 	 }
 	 
 	@Override
-	public IPricePrediction getPrediction() {
+	public GoodPriceVector getPrediction() {
 		return pricePrediction;
 	}
+  @Override
+  public Map<Good, Price> getMeanPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public Map<Good, Price> getRandomPricePrediction() {
+    // TODO Auto-generated method stub
+    return null;
+  }
+  @Override
+  public IndependentHistogram getPriceDistribution() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 	
 }

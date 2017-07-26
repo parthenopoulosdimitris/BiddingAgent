@@ -1,14 +1,9 @@
 package brown.prediction.SCPP; 
 
-import java.util.Map;
 
-import brown.generatepredictions.Price;
-import brown.interfaces.IHistogram;
-import brown.interfaces.IIndependentPrediction;
 import brown.interfaces.IJointPrediction;
 import brown.interfaces.IPredictionStrategy;
-import brown.prediction.Good;
-import brown.prediction.GoodPriceVector;
+import brown.prediction.JointHistogram;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 
@@ -17,7 +12,7 @@ import brown.prediction.GoodPriceVector;
  * @author acoggins
  *
  */
-public class SCPPDependentDist implements IIndependentPrediction {
+public class SCPPDependentDist implements IJointPrediction {
 
   private IPredictionStrategy strat; 
   private Integer games; 
@@ -51,30 +46,10 @@ public class SCPPDependentDist implements IIndependentPrediction {
     this.initial = initial; 
     this.threshold = threshold; 
   }
-  
-  
-  
-  @Override
-  public GoodPriceVector getPrediction() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Map<Good, Price> getMeanPricePrediction() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Map<Good, Price> getRandomPricePrediction() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
 
   @Override
-  public IHistogram getPriceDistribution() {
+  public JointHistogram getPriceDistribution() {
     // TODO Auto-generated method stub
     return null;
   }

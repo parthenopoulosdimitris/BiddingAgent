@@ -1,8 +1,10 @@
 package brown.interfaces;
 
+import brown.prediction.GoodPriceVector;
+
 
 public interface IPredictionStrategy {
 
-	public IPricePrediction getPrediction();
+	public GoodPriceVector getPrediction();
 	
 }

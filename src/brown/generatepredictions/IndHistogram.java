@@ -11,6 +11,7 @@ import brown.interfaces.IIndependentPrediction;
 import brown.prediction.Good;
 import brown.prediction.GoodPrice;
 import brown.prediction.GoodPriceVector;
+import brown.prediction.IndependentHistogram;
 
 public class IndHistogram implements IIndependentPrediction {
 
@@ -189,6 +190,12 @@ private Set<Price> priceSet;
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+  @Override
+  public IndependentHistogram getPriceDistribution() {
+    // TODO Auto-generated method stub
+    return null;
+  }
 
 
 

@@ -13,7 +13,7 @@ import brown.interfaces.IPricePrediction;
 public class ExpectedMU implements IPredictionStrategy {
 
   @Override
-  public IPricePrediction getPrediction() {
+  public GoodPriceVector getPrediction() {
     // TODO Auto-generated method stub
     return null;
   }

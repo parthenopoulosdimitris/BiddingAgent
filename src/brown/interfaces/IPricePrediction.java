@@ -7,12 +7,13 @@ import brown.prediction.Good;
 import brown.prediction.GoodPrice;
 import brown.prediction.GoodPriceVector;
 
+/**
+ * the top-level interface for price predictions.
+ * is extended by IPointPrediction and IDistribution
+ * @author acoggins
+ *
+ */
 public interface IPricePrediction {
 	
-	public GoodPriceVector getPrediction();
-
-	Map<Good, Price> getMeanPricePrediction();
-
-	Map<Good, Price> getRandomPricePrediction();
 
 }

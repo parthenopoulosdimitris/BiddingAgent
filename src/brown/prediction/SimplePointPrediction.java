@@ -30,17 +30,6 @@ public class SimplePointPrediction implements IPointPrediction {
     this.predictions.add(aPrediction);
   }
 
-  @Override
-  public Map<Good, Price> getMeanPricePrediction() {
-    // TODO Auto-generated method stub
-    return null;
-  }
-
-  @Override
-  public Map<Good, Price> getRandomPricePrediction() {
-    // TODO Auto-generated method stub
-    return null;
-  }
 
   
 }
