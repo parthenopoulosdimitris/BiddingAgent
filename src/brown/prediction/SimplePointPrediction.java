@@ -3,25 +3,25 @@ package brown.prediction;
 import java.util.Map;
 
 import brown.generatepredictions.Price;
-import brown.interfaces.IPricePrediction;
+import brown.interfaces.IPointPrediction;
 
 
 
-public class PointPrediction implements IPricePrediction {
+public class SimplePointPrediction implements IPointPrediction {
 
-  private PredictionVector predictions;
+  private GoodPriceVector predictions;
   
   
-  public PointPrediction() {
-    this.predictions = new PredictionVector();
+  public SimplePointPrediction() {
+    this.predictions = new GoodPriceVector();
   }
   
-  public PointPrediction(PredictionVector p) {
+  public SimplePointPrediction(GoodPriceVector p) {
     this.predictions = p;
   }
   
   @Override
-  public PredictionVector getPrediction() {
+  public GoodPriceVector getPrediction() {
     return predictions;
   }
   

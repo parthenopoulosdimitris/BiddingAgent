@@ -11,17 +11,18 @@ import brown.prediction.Good;
 
 public class LocalBid implements IBidStrategy {
 	double slack = 0.0001;
-	double NUM_ITERATIONS=100;
+	Integer NUM_ITERATIONS = 100;
 	int NUM_SAMPLES=1000;
 	Map<Good,Price> bids=null;
-	private Double[] _currentBid;
+	private Double[] currentBid;
 	
 	public LocalBid(IPricePrediction pp, IValuation val) {
-		bids=pp.getMeanPricePrediction();
-		for (int i=1; i<NUM_ITERATIONS; i++){
+		bids = pp.getMeanPricePrediction();
+		for (int i = 1; i < NUM_ITERATIONS; i++){
 			for(Good good:bids.keySet()){
-				double marginalUtility=0.0;
-				double totalMarginalUtility = 0.0;
+			  //not currently used
+				Double marginalUtility=0.0;
+				Double totalMarginalUtility = 0.0;
 				for (int j=1; j<NUM_SAMPLES; j++){
 					Map<Good,Price> prices =pp.getRandomPricePrediction();
 					double totalPrice=0.0;

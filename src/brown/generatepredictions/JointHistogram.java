@@ -5,7 +5,7 @@ import java.util.Map;
 import brown.interfaces.IJointPrediction;
 import brown.prediction.Good;
 import brown.prediction.GoodPrice;
-import brown.prediction.PredictionVector;
+import brown.prediction.GoodPriceVector;
 
 public class JointHistogram implements IJointPrediction {
 
@@ -34,7 +34,7 @@ public class JointHistogram implements IJointPrediction {
 	}
 
   @Override
-  public PredictionVector getPrediction() {
+  public GoodPriceVector getPrediction() {
     // TODO Auto-generated method stub
     return null;
   }

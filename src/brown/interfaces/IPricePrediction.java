@@ -5,18 +5,14 @@ import java.util.Map;
 import brown.generatepredictions.Price;
 import brown.prediction.Good;
 import brown.prediction.GoodPrice;
-import brown.prediction.PredictionVector;
+import brown.prediction.GoodPriceVector;
 
 public interface IPricePrediction {
 	
-	public PredictionVector getPrediction();
-	
-	public void setPrediction(GoodPrice aPrediction);
+	public GoodPriceVector getPrediction();
 
 	Map<Good, Price> getMeanPricePrediction();
 
-
 	Map<Good, Price> getRandomPricePrediction();
-
 
 }

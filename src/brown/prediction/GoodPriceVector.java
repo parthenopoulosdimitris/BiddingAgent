@@ -5,21 +5,21 @@ import java.util.Iterator;
 import java.util.Map;
 
 
-public class PredictionVector implements Iterable<GoodPrice> {
+public class GoodPriceVector implements Iterable<GoodPrice> {
   
   private Map<Good, Double> priceMap;
   
-  public PredictionVector() {
+  public GoodPriceVector() {
     this.priceMap = new HashMap<Good, Double>();
   }
   
   
-  public PredictionVector (PredictionVector p) {
+  public GoodPriceVector (GoodPriceVector p) {
     this.priceMap = new HashMap<Good, Double>();
     this.addAll(p);
   }
   
-  public PredictionVector(Map<Good, Double> aMap) {
+  public GoodPriceVector(Map<Good, Double> aMap) {
     this.priceMap = new HashMap<Good, Double>(aMap);
     }
   
@@ -64,7 +64,7 @@ public class PredictionVector implements Iterable<GoodPrice> {
     priceMap.putAll(goods);
   }
   
-  public void addAll(PredictionVector predictions) {
+  public void addAll(GoodPriceVector predictions) {
     for(GoodPrice p : predictions) {
       this.add(p);
     }

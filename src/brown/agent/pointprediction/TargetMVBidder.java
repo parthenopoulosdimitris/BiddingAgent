@@ -10,8 +10,8 @@ import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.prediction.Good;
 import brown.prediction.GoodPrice;
-import brown.prediction.PointPrediction;
-import brown.prediction.PredictionVector;
+import brown.prediction.SimplePointPrediction;
+import brown.prediction.GoodPriceVector;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
@@ -27,7 +27,7 @@ import brown.valuation.ValuationBundle;
  */
 public class TargetMVBidder extends SimpleAgent {
   
-  private PointPrediction aPrediction;
+  private SimplePointPrediction aPrediction;
   
   /**
    * constructor for auction 
@@ -42,8 +42,8 @@ public class TargetMVBidder extends SimpleAgent {
   @Override
   public void onSimpleOpenOutcry(SimpleAuction market) {
     //populate point prediction-- for now, predictions pulled from the ether
-    aPrediction = new PointPrediction();
-    PredictionVector prediction = aPrediction.getPrediction();
+    aPrediction = new SimplePointPrediction();
+    GoodPriceVector prediction = aPrediction.getPrediction();
     for(FullType f : this.allGoods) {
       Good g = new Good(f.ID);
       GoodPrice good = new GoodPrice(g, 3.0);
@@ -92,7 +92,7 @@ public class TargetMVBidder extends SimpleAgent {
    * in a valuation bundle, so they come with their valuations, 
    * for convenience of use.
    */
-  private ValuationBundle getAcquisition(PredictionVector aPrediction) {
+  private ValuationBundle getAcquisition(GoodPriceVector aPrediction) {
     //make a copy for editing.
     ValuationBundle copy = new ValuationBundle(this.myValuation);
     ValuationBundle acquisition = new ValuationBundle();
@@ -135,12 +135,12 @@ public class TargetMVBidder extends SimpleAgent {
    * @param good
    * @return
    */
-  private Double calculateMarginalValue (GoodPrice good, PredictionVector aVec) {  
+  private Double calculateMarginalValue (GoodPrice good, GoodPriceVector aVec) {  
     //create a copy with the specified good free of charge. 
-    PredictionVector goodFree = new PredictionVector(aVec);
+    GoodPriceVector goodFree = new GoodPriceVector(aVec);
     goodFree.add(good.getGood(), 0.0);
     //and now one where the good is unavailable.
-    PredictionVector goodUnavailable = new PredictionVector(aVec);
+    GoodPriceVector goodUnavailable = new GoodPriceVector(aVec);
     goodUnavailable.add(good.getGood(), Double.POSITIVE_INFINITY);
     //get the acquisition for each of these cases.
     ValuationBundle acqFree = this.getAcquisition(goodFree);

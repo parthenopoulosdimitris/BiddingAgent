@@ -21,7 +21,7 @@ public class GoodPriceIterator implements Iterable<GoodPrice>, Iterator<GoodPric
    * @param valSet
    * a PredictionVector.
    */
-  public GoodPriceIterator(PredictionVector valSet) {
+  public GoodPriceIterator(GoodPriceVector valSet) {
     this.priceArray = valSet.toArray(); 
     this.index = 0; 
   }

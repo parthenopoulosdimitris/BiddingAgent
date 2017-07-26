@@ -9,8 +9,8 @@ import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
 import brown.prediction.Good;
 import brown.prediction.GoodPrice;
-import brown.prediction.PointPrediction;
-import brown.prediction.PredictionVector;
+import brown.prediction.SimplePointPrediction;
+import brown.prediction.GoodPriceVector;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
@@ -24,7 +24,7 @@ import brown.valuation.ValuationBundle;
  */
 public class TargetPriceBidder extends SimpleAgent {
   
-  private PointPrediction aPrediction;
+  private SimplePointPrediction aPrediction;
   /**
    * constructor for auction 
    * @param host
@@ -41,7 +41,7 @@ public class TargetPriceBidder extends SimpleAgent {
    * the market to be bid in.
    */
   public void onSimpleOpenOutcry(SimpleAuction market) {
-    aPrediction = new PointPrediction();
+    aPrediction = new SimplePointPrediction();
     for(FullType f : this.allGoods) {
       Good g = new Good(f.ID);
       GoodPrice good = new GoodPrice(g, 3.0);
@@ -83,7 +83,7 @@ public class TargetPriceBidder extends SimpleAgent {
    * in a valuation bundle, so they come with their valuations, 
    * for convenience of use.
    */
-  private ValuationBundle getAcquisition(PredictionVector aPrediction) {
+  private ValuationBundle getAcquisition(GoodPriceVector aPrediction) {
     //the return bundle
     ValuationBundle copy = new ValuationBundle(this.myValuation);
     ValuationBundle acquisition = new ValuationBundle();
