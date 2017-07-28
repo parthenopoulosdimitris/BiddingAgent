@@ -12,10 +12,6 @@ public class SimpleValuation {
   private SimpleEntry<Set<Good>, Double> entry;
   
   
-  public SimpleValuation() {
-    
-  }
-  
   /**
    * constructor for a valuation over a set of goods.
    * @param goods

@@ -14,7 +14,7 @@ import brown.prediction.good.Good;
  * @author acoggins
  *
  */
-public class SimpleValuationBundle implements Iterable<SimpleValuation> {
+public class SimpleValuationBundle implements IValuation, Iterable<SimpleValuation> {
   
   private Map<Set<Good>, Double> valMap; 
   

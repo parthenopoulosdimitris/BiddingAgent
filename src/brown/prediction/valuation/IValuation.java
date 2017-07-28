@@ -7,6 +7,6 @@ import brown.prediction.good.Good;
 
 public interface IValuation {
 
-  double getValuation(Set<Good> goods);
+  public SimpleValuation getValuation(Set<Good> goods);
 
 }

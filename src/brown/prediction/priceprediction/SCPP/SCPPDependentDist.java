@@ -1,4 +1,4 @@
-package brown.prediction.SCPP; 
+package brown.prediction.priceprediction.SCPP; 
 
 
 import brown.prediction.histogram.JointHistogram;
