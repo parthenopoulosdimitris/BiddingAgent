@@ -1,4 +1,4 @@
-package brown.interfaces; 
+package brown.prediction.histogram; 
 
 /**
  * Interface for a Histogram.

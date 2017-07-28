@@ -1,6 +1,6 @@
-package brown.interfaces;
+package brown.prediction.priceprediction;
 
-import brown.prediction.IndependentHistogram;
+import brown.prediction.histogram.IndependentHistogram;
 
 /**
  * implementation-level interface for price prediction. 

@@ -1,12 +1,10 @@
-package brown.prediction; 
+package brown.prediction.histogram; 
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import brown.interfaces.IHistogram;
 
 /**
  * an independent histogram stores data in bins. used for

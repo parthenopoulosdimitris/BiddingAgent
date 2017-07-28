@@ -3,7 +3,7 @@ package brown.generatepredictions;
 
 import java.util.Map;
 
-import brown.prediction.Good;
+import brown.prediction.good.Good;
 
 public interface IPricePrediction {
 	

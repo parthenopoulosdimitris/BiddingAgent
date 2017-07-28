@@ -2,10 +2,10 @@ package brown.generatepredictions;
 
 import java.util.Map;
 
-import brown.interfaces.IJointPrediction;
-import brown.prediction.Good;
-import brown.prediction.GoodPrice;
-import brown.prediction.GoodPriceVector;
+import brown.prediction.good.Good;
+import brown.prediction.good.GoodPrice;
+import brown.prediction.good.GoodPriceVector;
+import brown.prediction.priceprediction.IJointPrediction;
 
 public class JointHistogram implements IJointPrediction {
 

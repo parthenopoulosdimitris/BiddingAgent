@@ -1,7 +1,7 @@
-package brown.prediction;
+package brown.prediction.strategies;
 
-import brown.interfaces.IPredictionStrategy;
-import brown.interfaces.IPricePrediction;
+import brown.prediction.good.GoodPriceVector;
+import brown.prediction.priceprediction.IPricePrediction;
 
 /**
  * ExpectedMU is a price prediction strategy that gives the expected

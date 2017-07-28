@@ -1,4 +1,4 @@
-package brown.prediction;
+package brown.prediction.good;
 
 import java.util.AbstractMap.SimpleEntry;
 

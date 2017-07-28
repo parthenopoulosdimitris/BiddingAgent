@@ -1,13 +1,12 @@
 
-package brown.interfaces;
+package brown.prediction.valuation;
 
 import java.util.Set;
 
-import brown.prediction.Good;
+import brown.prediction.good.Good;
 
 public interface IValuation {
 
-  double getValuation(Good g);
   double getValuation(Set<Good> goods);
 
 }

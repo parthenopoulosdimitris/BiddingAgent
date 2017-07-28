@@ -1,9 +1,10 @@
-package brown.prediction;
+package brown.prediction.priceprediction;
 
 import java.util.Map;
 
 import brown.generatepredictions.Price;
-import brown.interfaces.IPointPrediction;
+import brown.prediction.good.GoodPrice;
+import brown.prediction.good.GoodPriceVector;
 
 
 

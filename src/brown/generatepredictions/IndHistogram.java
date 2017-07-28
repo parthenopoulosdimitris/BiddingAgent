@@ -7,11 +7,11 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import brown.interfaces.IIndependentPrediction;
-import brown.prediction.Good;
-import brown.prediction.GoodPrice;
-import brown.prediction.GoodPriceVector;
-import brown.prediction.IndependentHistogram;
+import brown.prediction.good.Good;
+import brown.prediction.good.GoodPrice;
+import brown.prediction.good.GoodPriceVector;
+import brown.prediction.histogram.IndependentHistogram;
+import brown.prediction.priceprediction.IIndependentPrediction;
 
 public class IndHistogram implements IIndependentPrediction {
 

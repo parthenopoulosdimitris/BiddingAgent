@@ -7,10 +7,10 @@ import brown.agent.library.SimpleAgent;
 import brown.assets.value.FullType;
 import brown.exceptions.AgentCreationException;
 import brown.markets.SimpleAuction;
-import brown.prediction.Good;
-import brown.prediction.GoodPrice;
-import brown.prediction.SimplePointPrediction;
-import brown.prediction.GoodPriceVector;
+import brown.prediction.good.Good;
+import brown.prediction.good.GoodPrice;
+import brown.prediction.good.GoodPriceVector;
+import brown.prediction.priceprediction.SimplePointPrediction;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 

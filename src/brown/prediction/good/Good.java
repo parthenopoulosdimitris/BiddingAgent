@@ -1,5 +1,5 @@
 
-package brown.prediction;
+package brown.prediction.good;
 
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;

@@ -1,9 +1,9 @@
 package brown.prediction.SCPP; 
 
 
-import brown.interfaces.IJointPrediction;
-import brown.interfaces.IPredictionStrategy;
-import brown.prediction.JointHistogram;
+import brown.prediction.histogram.JointHistogram;
+import brown.prediction.priceprediction.IJointPrediction;
+import brown.prediction.strategies.IPredictionStrategy;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 

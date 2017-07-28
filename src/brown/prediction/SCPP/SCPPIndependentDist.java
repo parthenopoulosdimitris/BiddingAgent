@@ -1,9 +1,9 @@
 package brown.prediction.SCPP; 
 
 
-import brown.interfaces.IIndependentPrediction;
-import brown.interfaces.IPredictionStrategy;
-import brown.prediction.IndependentHistogram;
+import brown.prediction.histogram.IndependentHistogram;
+import brown.prediction.priceprediction.IIndependentPrediction;
+import brown.prediction.strategies.IPredictionStrategy;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 
@@ -48,7 +48,11 @@ public class SCPPIndependentDist implements IIndependentPrediction {
     this.threshold = threshold; 
   }
   
-
+  
+  //what do we need to do here: 
+  //1. create a price prediction strategy
+  //2. create an initial price prediction.
+  //give the 
   @Override
   public IndependentHistogram getPriceDistribution() {
     // TODO Auto-generated method stub

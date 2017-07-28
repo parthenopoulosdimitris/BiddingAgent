@@ -1,4 +1,4 @@
-package brown.prediction; 
+package brown.prediction.histogram; 
 
 /**
  * a bin within a histogram

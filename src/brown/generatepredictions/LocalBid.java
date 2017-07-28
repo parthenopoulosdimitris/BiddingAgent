@@ -5,9 +5,9 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.interfaces.IBidStrategy;
-import brown.interfaces.IPricePrediction;
-import brown.interfaces.IValuation;
-import brown.prediction.Good;
+import brown.prediction.good.Good;
+import brown.prediction.priceprediction.IPricePrediction;
+import brown.prediction.valuation.IValuation;
 
 public class LocalBid implements IBidStrategy {
 	double slack = 0.0001;

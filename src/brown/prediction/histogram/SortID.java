@@ -1,4 +1,4 @@
-package brown.prediction;
+package brown.prediction.histogram;
 
 import java.util.Comparator;
 

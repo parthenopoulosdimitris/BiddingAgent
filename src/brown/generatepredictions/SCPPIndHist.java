@@ -4,12 +4,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import brown.interfaces.IBidStrategy;
-import brown.interfaces.IIndependentPrediction;
-import brown.interfaces.IPredictionStrategy;
-import brown.interfaces.IPricePrediction;
-import brown.prediction.Good;
-import brown.prediction.GoodPriceVector;
-import brown.prediction.IndependentHistogram;
+import brown.prediction.good.Good;
+import brown.prediction.good.GoodPriceVector;
+import brown.prediction.histogram.IndependentHistogram;
+import brown.prediction.priceprediction.IIndependentPrediction;
+import brown.prediction.priceprediction.IPricePrediction;
+import brown.prediction.strategies.IPredictionStrategy;
 
 public class SCPPIndHist implements IIndependentPrediction {
 	 double alpha =0.1;

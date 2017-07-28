@@ -1,6 +1,6 @@
-package brown.interfaces;
+package brown.prediction.strategies;
 
-import brown.prediction.GoodPriceVector;
+import brown.prediction.good.GoodPriceVector;
 
 
 public interface IPredictionStrategy {
