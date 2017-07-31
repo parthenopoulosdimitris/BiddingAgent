@@ -3,6 +3,7 @@ package brown.prediction.good;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * Datatype for a vector of goods associated with prices. 
@@ -96,6 +97,15 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    */
   public GoodPrice getGoodPrice(Good good) {
     return new GoodPrice(good, priceMap.get(good));
+  }
+  
+  /**
+   * gets all goods
+   * @return
+   * all the goods in the vector in a set.
+   */
+  public Set<Good> getGoods() {
+    return priceMap.keySet();
   }
   
   /**

@@ -1,10 +1,13 @@
 package brown.prediction.priceprediction.SCPP; 
 
 
+import brown.prediction.good.GoodDistVector;
+import brown.prediction.good.GoodPriceVector;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.strategies.IPredictionStrategy;
 import brown.prediction.valuation.MetaVal;
+import brown.prediction.valuation.ValuePort;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 
@@ -23,11 +26,13 @@ import brown.prediction.valuation.MetaVal;
 public class SCPPIndependentDist implements IIndependentPrediction {
 
   private IPredictionStrategy strat; 
-  private Integer games; 
+  private Integer numGames; 
   private Integer iterations; 
   private IIndependentPrediction initial; 
   private Double threshold; 
-  private MetaVal distInfo;
+  private ValuePort vPort; 
+  
+  private Integer SIMPLAYERS = 10;
   
   /**
    * Constructor for SCPPIndependentDist. Here is where inputs for the algorithm
@@ -41,30 +46,67 @@ public class SCPPIndependentDist implements IIndependentPrediction {
    * @param decay
    * Decay schedule for simulations
    * @param initial
-   * An initial price prediction to be imperoved upon
+   * An initial price prediction to be improved upon
    * @param threshold
    * KS threshold.
    */
   public SCPPIndependentDist(IPredictionStrategy strat, Integer games, Integer iterations, 
       IIndependentPrediction initial, Double threshold, MetaVal distInfo) {
     this.strat = strat; 
-    this.games = games; 
+    this.numGames = games; 
     this.iterations = iterations;  
     this.initial = initial; 
     this.threshold = threshold; 
-    this.distInfo = distInfo; 
+    this.vPort = new ValuePort(distInfo, initial.getPrediction().getGoods()); 
   }
   
   
-  //what do we need to do here: 
-  //1. create a price prediction strategy
-  //2. create an initial price prediction.
-  //give the 
+
+  //here it would be by far most efficient to treat the goods as totally 
+  //independent.
+  //that means going to the TP valuation and making a valuation for 
+  //each individual good and then sending it over as a simple valuation
+  //bundle with numGoods observations where each observation is just a 
+  //good.
+  //repeatedly sample each good with a montecarlo simulation.
+  //fill up histograms with the information.
+  
   @Override
-  public IndependentHistogram getPriceDistribution() {
+  public GoodDistVector getPrediction() {
     // TODO Auto-generated method stub
+    IIndependentPrediction returnPrediction = initial;
+    GoodDistVector returnVector = returnPrediction.getPrediction();
+    Boolean withinThreshold = true; 
+    for(int i = 0; i < iterations; i++) {
+      IIndependentPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
+    }
     return null;
   }
+
+  
+  private IIndependentPrediction playSelf(Integer numPlayers,
+      IIndependentPrediction aPrediction) {
+
+    for(int i = 0; i < numGames; i++) {
+      for(int j = 0; j < numPlayers; j++) {
+        //we want each 'player' to get a set of valuation
+        //in the value port, we can make this happen. 
+        
+      }
+    }
+    
+    return null; 
+  }
+
+  @Override
+  public void setPrediction(GoodDistVector inputPrediction) {
+    // TODO Auto-generated method stub
+  }
+  
+  
+  
+  
+  
   
   
 }

@@ -61,14 +61,25 @@ public class MetaVal {
     return this.variance;
   }
   
+  /*(
+   * gets the value function
+   */
   public Function<Integer, Double> getValFunction() {
     return this.valFunction; 
   }
   
+  /**
+   * gets whether or not it is monotonic.
+   * @return
+   */
   public Boolean getMonotonic() {
     return this.monotonic; 
   }
   
+  /**
+   * gets the valueScale.
+   * @return
+   */
   public Double getScale() {
     return this.scale;
   }

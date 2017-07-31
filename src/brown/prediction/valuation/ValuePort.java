@@ -6,6 +6,8 @@ import java.util.Set;
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
 import brown.prediction.good.Good;
+import brown.prediction.good.GoodDist;
+import brown.prediction.good.GoodDistVector;
 import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
 import brown.valuation.NormalValuation;
@@ -28,36 +30,38 @@ public class ValuePort {
   private SizeDependentValuation sizeVal; 
   private UniformValuation uniVal;
 
+  
   /**
    * constructor for a value port. currently using multiple objects
    * for the different distributions but this shouldn't really be 
    * necessary.
-   * TODO: update jat and change from FullType to BasicType
+   * TODO: update jar and change from FullType to BasicType
    * @param metaVal
+   * a meta-valuation that holds all the info of the underlying distribution
+   * @param allGoods
+   * all of the goods to be valued, input as a GoodPriceVector
    */
-  public ValuePort(MetaVal metaVal, GoodPriceVector allGoods) {
+  public ValuePort(MetaVal metaVal, Set<Good> allGoods) {
     //create FullType 
     Set<FullType> allGoodsTP = new HashSet<FullType>();
     
-    for(GoodPrice g : allGoods) {
-      allGoodsTP.add(new FullType(TradeableType.Good, 0));
+    for(Good g : allGoods) {
+      allGoodsTP.add(new FullType(TradeableType.Good, g.ID));
     }
-    
     if(metaVal.getType() == DistributionType.Normal) {
-        this.normalVal = new NormalValuation(allGoodsTP,
-            metaVal.getValFunction(), metaVal.getVariance(),
-            0.0, metaVal.getMonotonic(), metaVal.getScale());
-        }
-    
+      this.normalVal = new NormalValuation(allGoodsTP,
+          metaVal.getValFunction(), metaVal.getVariance(),
+          0.0, metaVal.getMonotonic(), metaVal.getScale());
+      }
     else if (metaVal.getType() == DistributionType.Uniform) {
-      
+      //fill this in eventually when get uniform valuation.
     }
-    
     else {
       this.sizeVal = new SizeDependentValuation(allGoodsTP,  
-          metaVal.getValFunction(), metaVal.getScale());
-    }    
+        metaVal.getValFunction(), metaVal.getScale());
+    } 
   }
+  
   
   /**
    * get all for normal distribution
@@ -66,6 +70,18 @@ public class ValuePort {
   public SimpleValuationBundle getAllNormal() {
     ValuationBundle temp =  normalVal.getAllValuations();
     return convertToSimple(temp); 
+  }
+  
+  /**
+   * get one good from a normal distribution.
+   * @param aGood
+   * @return
+   */
+  public SimpleValuation getIndependentNormal(Good aGood) {
+    Set<FullType> mockSet = new HashSet<FullType>(); 
+    mockSet.add(new FullType(TradeableType.Good, aGood.ID));
+    NormalValuation singleVal = new NormalValuation(mockSet, metaVal.getValFunction, 
+        )
   }
   
   /**

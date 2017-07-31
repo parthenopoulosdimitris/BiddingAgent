@@ -3,11 +3,11 @@ package brown.prediction.good;
 import java.util.Iterator;
 
 /**
- * iterator for the GoodDist datatype within a PredictionVector.
+ * iterator for the GoodDist datatype within a GoodDistVector.
  * For now it is read-only so you will have to work with the 
  * PredictionVector itself to make changes with the iterator, 
  * since the iterator works by iterating over an array copy of 
- * the PredictionVector datatype.
+ * the GoodDistVector datatype.
  * @author acoggins
  *
  */
@@ -19,7 +19,7 @@ public class GoodDistIterator implements Iterable<GoodDist>, Iterator<GoodDist> 
   /**
    * iterator constuctor.
    * @param valSet
-   * a PredictionVector.
+   * a GoodDistVector.
    */
   public GoodDistIterator(GoodDistVector valSet) {
     this.priceArray = valSet.toArray(); 

@@ -3,6 +3,7 @@ package brown.prediction.good;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import brown.prediction.histogram.IndependentHistogram;
 
@@ -91,6 +92,15 @@ public class GoodDistVector implements Iterable<GoodDist> {
      */
     public GoodDist getGoodDist(Good good) {
       return new GoodDist(good, histMap.get(good));
+    }
+    
+    /**
+     * gets all goods
+     * @return
+     * all the goods in the vector in a set.
+     */
+    public Set<Good> getGoods() {
+      return histMap.keySet();
     }
     
     /**

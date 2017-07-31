@@ -50,7 +50,7 @@ public class SCPPPoint implements IPointPrediction {
     this.numIterations = numIterations;  
     this.pdThresh = pdThresh; 
     
-    this.vPort = new ValuePort(distInfo, initial.getPrediction());
+    this.vPort = new ValuePort(distInfo, initial.getPrediction().getGoods());
   }
 
   
@@ -94,7 +94,13 @@ public class SCPPPoint implements IPointPrediction {
   /**
    * method that simulates a game against oneself, with an input number of 
    * simulated players.
+   * @param simPlayers
+   * number of Simulated Players.
+   * @param aPrediction
+   * an input prediction
    * @return
+   * a point prediction that is the average result of winning auctions against 
+   * self.
    */
   private IPointPrediction playSelf(Integer simPlayers, 
       IPointPrediction aPrediction) {
@@ -105,7 +111,7 @@ public class SCPPPoint implements IPointPrediction {
       GoodPriceVector currentHighest = new GoodPriceVector();
       //initialize and populate a goodPriceVector
       for(GoodPrice g : aPrediction.getPrediction()) {
-        g.setPrice(0.0);
+        guess.add(new GoodPrice(g.getGood(), 0.0));
       }
       //for each simulated player submit a simulated bid based on the 
       //valuation distributions and the bidding strategy

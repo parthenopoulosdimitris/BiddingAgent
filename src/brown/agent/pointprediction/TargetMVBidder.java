@@ -11,7 +11,7 @@ import brown.markets.SimpleAuction;
 import brown.prediction.good.Good;
 import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
-import brown.prediction.priceprediction.SimplePointPrediction;
+import brown.prediction.priceprediction.SimpleDistPrediction;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
@@ -27,7 +27,7 @@ import brown.valuation.ValuationBundle;
  */
 public class TargetMVBidder extends SimpleAgent {
   
-  private SimplePointPrediction aPrediction;
+  private SimpleDistPrediction aPrediction;
   
   /**
    * constructor for auction 
@@ -42,7 +42,7 @@ public class TargetMVBidder extends SimpleAgent {
   @Override
   public void onSimpleOpenOutcry(SimpleAuction market) {
     //populate point prediction-- for now, predictions pulled from the ether
-    aPrediction = new SimplePointPrediction();
+    aPrediction = new SimpleDistPrediction();
     GoodPriceVector prediction = aPrediction.getPrediction();
     for(FullType f : this.allGoods) {
       Good g = new Good(f.ID);
