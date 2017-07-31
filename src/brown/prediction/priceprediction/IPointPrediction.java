@@ -11,6 +11,6 @@ public interface IPointPrediction extends IPricePrediction {
   
   public GoodPriceVector getPrediction();
   
-  public void setPrediction(GoodPrice aPrediction);
+  public void setPrediction(GoodPriceVector aPrediction);
   
 }

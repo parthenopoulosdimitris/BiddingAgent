@@ -1,5 +1,6 @@
 package brown.prediction.priceprediction.SCPP;
 
+
 import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
 import brown.prediction.priceprediction.IPointPrediction;
@@ -18,9 +19,7 @@ public class SCPPPoint implements IPointPrediction {
   private IPointPrediction initial; 
   private Integer numGames; 
   private Integer numIterations; 
-  private Double decay;
   private Double pdThresh; 
-  private MetaVal distInfo;
   private ValuePort vPort;
   
   private Integer SIMPLAYERS = 10;
@@ -44,14 +43,12 @@ public class SCPPPoint implements IPointPrediction {
    * information about the underlying valuation distribution.
    */
   public SCPPPoint(IPredictionStrategy strat, IPointPrediction initial, Integer numGames, 
-      Integer numIterations, Double decay, Double pdThresh, MetaVal distInfo) {
+      Integer numIterations, Double pdThresh, MetaVal distInfo) {
     this.strat = strat; 
     this.initial = initial; 
     this.numGames = numGames;
-    this.numIterations = numIterations; 
-    this.decay = decay; 
+    this.numIterations = numIterations;  
     this.pdThresh = pdThresh; 
-    this.distInfo = distInfo; 
     
     this.vPort = new ValuePort(distInfo, initial.getPrediction());
   }
@@ -59,12 +56,39 @@ public class SCPPPoint implements IPointPrediction {
   
   @Override
   public GoodPriceVector getPrediction() {
-    
+    //following the SCPP algorithm specified in the paper:
+    //set an initial point prediction
     IPointPrediction returnPrediction = initial; 
+    //usable prediction. 
+    GoodPriceVector returnVector = returnPrediction.getPrediction();
+    Boolean withinThreshold = true; 
+    //main loop over input number of iterations.
     for(int i = 0; i < numIterations; i++) {
+      //get a point prediction as a result of simulating games against self.
       IPointPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
+      //usable version
+      GoodPriceVector guessVector = aGuess.getPrediction();
+      //check for whether each bid in the updating version is within theshold of the
+      //game vector.
+      for(GoodPrice g : guessVector) {
+        if(g.getPrice() - returnVector.getGoodPrice(g.getGood()).getPrice() > pdThresh)
+          //if this condition is not met for every good, then we continue to iterate
+          withinThreshold = false; 
+      }
+      //if within threshold, we exit loop.
+      if(withinThreshold)
+        return guessVector;
+      //otherwise, set threshold condition back to true, introduce an updated
+      //vector according to the decay schedule and reiterate.
+      withinThreshold = true;
+      Double decay = (double)(numIterations - i + 1) / (double) numIterations;
+      for(GoodPrice g : returnVector) {
+        Double guessPrice = guessVector.getGoodPrice(g.getGood()).getPrice();
+        Double newPrice = decay * guessPrice + (1 - decay) * g.getPrice();
+        returnVector.add(new GoodPrice(g.getGood(), newPrice));
+      }
     }
-    return null;
+    return returnVector;
   }
 
   /**
@@ -74,27 +98,44 @@ public class SCPPPoint implements IPointPrediction {
    */
   private IPointPrediction playSelf(Integer simPlayers, 
       IPointPrediction aPrediction) {
-    //what do we need here... 
-    //we need a meta valuation so we can re-generate some 
-    //values according to the data given. 
-    //maybe we can give the meta values, but for now we'll
-    //just use the already existing value generator.
-    GoodPriceVector allGoods = initial.getPrediction();
-    for(GoodPrice g : allGoods) {
-      
-    }
+    //the final guess vector
+    GoodPriceVector guess = new GoodPriceVector();
+    //main loop; over G, number of games
     for(int i = 0; i < numGames; i++) {
-      for(int j = 0; j < SIMPLAYERS; j++) {
-       IValuation aValuation = vPort.getValuation(distInfo);
+      GoodPriceVector currentHighest = new GoodPriceVector();
+      //initialize and populate a goodPriceVector
+      for(GoodPrice g : aPrediction.getPrediction()) {
+        g.setPrice(0.0);
+      }
+      //for each simulated player submit a simulated bid based on the 
+      //valuation distributions and the bidding strategy
+      for(int j = 0; j < simPlayers; j++) {
+        //in this case, get a total valuation over a normal distribution. 
+        //CAN CHANGE THIS.
+       IValuation aValuation = vPort.getAllNormal();
       GoodPriceVector aBid = strat.getPrediction(aPrediction, aValuation);
+      //determine a winner of the auction.
+      for(GoodPrice g : aBid) {
+        if (currentHighest.getGoodPrice(g.getGood()).getPrice() < g.getPrice())
+          currentHighest.add(g);
+      }
+      }
+      //submit averaged version to guess (?? iffy about this if this step 
+      //is what is needed)
+      for(GoodPrice g : currentHighest) {
+        GoodPrice other = guess.getGoodPrice(g.getGood());
+        Double newPrice = (g.getPrice() / numGames) + other.getPrice();
+        guess.add(new GoodPrice(g.getGood(), newPrice));
       }
     }
-    return null; 
+    //convert to a price prediction.
+    IPointPrediction pointGuess = new SimplePointPrediction(); 
+    pointGuess.setPrediction(guess);
+    return pointGuess; 
   }
   
-  
   @Override
-  public void setPrediction(GoodPrice aPrediction) {
+  public void setPrediction(GoodPriceVector aPrediction) {
     // TODO Auto-generated method stub
     
   }

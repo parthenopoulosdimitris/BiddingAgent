@@ -27,9 +27,10 @@ public class SimplePointPrediction implements IPointPrediction {
   }
   
   @Override
-  public void setPrediction(GoodPrice aPrediction) {
-    this.predictions.add(aPrediction);
-  }
+  public void setPrediction(GoodPriceVector aPrediction) {
+    this.predictions = aPrediction;
+  } 
+  
 
 
   
