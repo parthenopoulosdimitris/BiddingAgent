@@ -11,7 +11,7 @@ import brown.markets.SimpleAuction;
 import brown.prediction.good.Good;
 import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
-import brown.prediction.priceprediction.SimpleDistPrediction;
+import brown.prediction.priceprediction.SimplePointPrediction;
 import brown.valuation.Valuation;
 import brown.valuation.ValuationBundle;
 
@@ -27,7 +27,7 @@ import brown.valuation.ValuationBundle;
  */
 public class TargetMVBidder extends SimpleAgent {
   
-  private SimpleDistPrediction aPrediction;
+  private SimplePointPrediction aPrediction;
   
   /**
    * constructor for auction 
@@ -42,7 +42,7 @@ public class TargetMVBidder extends SimpleAgent {
   @Override
   public void onSimpleOpenOutcry(SimpleAuction market) {
     //populate point prediction-- for now, predictions pulled from the ether
-    aPrediction = new SimpleDistPrediction();
+    aPrediction = new SimplePointPrediction();
     GoodPriceVector prediction = aPrediction.getPrediction();
     for(FullType f : this.allGoods) {
       Good g = new Good(f.ID);
@@ -51,8 +51,9 @@ public class TargetMVBidder extends SimpleAgent {
       // create new PP strategy object, and then
       // generate PP with SCPP- 
       //bid based on this PP strategy. 
-      aPrediction.setPrediction(good);
+      prediction.add(good);
     }
+    aPrediction.setPrediction(prediction);
     //initialize map of the goods to be bid. 
     Map<FullType, Double> toBid = new HashMap<FullType, Double>();
     //acquisition bundle returns all optimal bundles.
