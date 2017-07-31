@@ -4,11 +4,18 @@ package brown.prediction.priceprediction.SCPP;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.strategies.IPredictionStrategy;
+import brown.prediction.valuation.MetaVal;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 
  * under the assumption of independent valuations for goods (i.e. no supplementary, 
  * complementary goods).
+ *
+ * with the current value generator this seems like a bit of a trivial case, 
+ * because there is no variance in the valuation of goods.
+ * but worth implementing because it's a simpler version of the dependent 
+ * case, and there may be a version where there is independent variance among 
+ * goods but the bundles are additive
  * 
  * @author acoggins
  *
@@ -18,9 +25,9 @@ public class SCPPIndependentDist implements IIndependentPrediction {
   private IPredictionStrategy strat; 
   private Integer games; 
   private Integer iterations; 
-  private Double decay; 
   private IIndependentPrediction initial; 
   private Double threshold; 
+  private MetaVal distInfo;
   
   /**
    * Constructor for SCPPIndependentDist. Here is where inputs for the algorithm
@@ -39,13 +46,13 @@ public class SCPPIndependentDist implements IIndependentPrediction {
    * KS threshold.
    */
   public SCPPIndependentDist(IPredictionStrategy strat, Integer games, Integer iterations, 
-      Double decay, IIndependentPrediction initial, Double threshold) {
+      IIndependentPrediction initial, Double threshold, MetaVal distInfo) {
     this.strat = strat; 
     this.games = games; 
-    this.iterations = iterations; 
-    this.decay = decay; 
+    this.iterations = iterations;  
     this.initial = initial; 
     this.threshold = threshold; 
+    this.distInfo = distInfo; 
   }
   
   
