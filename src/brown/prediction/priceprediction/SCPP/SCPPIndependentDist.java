@@ -1,12 +1,17 @@
 package brown.prediction.priceprediction.SCPP; 
 
 
+import brown.prediction.good.Good;
 import brown.prediction.good.GoodDistVector;
+import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
+import brown.prediction.priceprediction.SimpleDistPrediction;
 import brown.prediction.strategies.IPredictionStrategy;
+import brown.prediction.valuation.IValuation;
 import brown.prediction.valuation.MetaVal;
+import brown.prediction.valuation.SimpleValuationBundle;
 import brown.prediction.valuation.ValuePort;
 
 /**
@@ -86,13 +91,24 @@ public class SCPPIndependentDist implements IIndependentPrediction {
   
   private IIndependentPrediction playSelf(Integer numPlayers,
       IIndependentPrediction aPrediction) {
-
+    GoodPriceVector currentHighest = new GoodPriceVector();
+    IIndependentPrediction result = new SimpleDistPrediction(); 
+    GoodDistVector guess = new GoodDistVector(); 
     for(int i = 0; i < numGames; i++) {
       for(int j = 0; j < numPlayers; j++) {
-        //we want each 'player' to get a set of valuation
-        //in the value port, we can make this happen. 
-        
+       //get valuations
+        SimpleValuationBundle indBundle = new SimpleValuationBundle();
+        for(Good g : aPrediction.getPrediction().getGoods()) {
+         indBundle.add(vPort.getIndependentNormal(g));
+        }
+        GoodPriceVector aBid = strat.getPrediction(aPrediction, indBundle);
+        for(GoodPrice g : aBid) {
+          if (currentHighest.getGoodPrice(g.getGood()).getPrice() < g.getPrice())
+            currentHighest.add(g);
+        }
       }
+      //now that we have a winning vector, add it to the goodDist. 
+      currentHighest.clear();
     }
     
     return null; 

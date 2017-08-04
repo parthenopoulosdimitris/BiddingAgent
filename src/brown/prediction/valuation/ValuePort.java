@@ -29,6 +29,7 @@ public class ValuePort {
   private NormalValuation normalVal;
   private SizeDependentValuation sizeVal; 
   private UniformValuation uniVal;
+  private MetaVal metaVal;
 
   
   /**
@@ -80,8 +81,12 @@ public class ValuePort {
   public SimpleValuation getIndependentNormal(Good aGood) {
     Set<FullType> mockSet = new HashSet<FullType>(); 
     mockSet.add(new FullType(TradeableType.Good, aGood.ID));
-    NormalValuation singleVal = new NormalValuation(mockSet, metaVal.getValFunction, 
-        )
+    NormalValuation singleVal = new NormalValuation(mockSet, metaVal.getValFunction(),
+        metaVal.getMonotonic(), metaVal.getScale());
+    ValuationBundle intermediate = singleVal.getAllValuations();
+    Set<Good> returnSet = new HashSet<Good>();
+    returnSet.add(aGood);
+    return new SimpleValuation(returnSet, intermediate.getOrDefault(mockSet, 0.0));
   }
   
   /**

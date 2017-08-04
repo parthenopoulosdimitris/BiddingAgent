@@ -106,9 +106,9 @@ public class SCPPPoint implements IPointPrediction {
       IPointPrediction aPrediction) {
     //the final guess vector
     GoodPriceVector guess = new GoodPriceVector();
+    GoodPriceVector currentHighest = new GoodPriceVector();
     //main loop; over G, number of games
     for(int i = 0; i < numGames; i++) {
-      GoodPriceVector currentHighest = new GoodPriceVector();
       //initialize and populate a goodPriceVector
       for(GoodPrice g : aPrediction.getPrediction()) {
         guess.add(new GoodPrice(g.getGood(), 0.0));
@@ -133,6 +133,7 @@ public class SCPPPoint implements IPointPrediction {
         Double newPrice = (g.getPrice() / numGames) + other.getPrice();
         guess.add(new GoodPrice(g.getGood(), newPrice));
       }
+      currentHighest.clear();
     }
     //convert to a price prediction.
     IPointPrediction pointGuess = new SimplePointPrediction(); 
