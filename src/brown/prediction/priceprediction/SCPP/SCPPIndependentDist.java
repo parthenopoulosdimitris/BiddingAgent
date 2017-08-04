@@ -2,6 +2,7 @@ package brown.prediction.priceprediction.SCPP;
 
 
 import brown.prediction.good.Good;
+import brown.prediction.good.GoodDist;
 import brown.prediction.good.GoodDistVector;
 import brown.prediction.good.GoodPrice;
 import brown.prediction.good.GoodPriceVector;
@@ -9,7 +10,6 @@ import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.priceprediction.SimpleDistPrediction;
 import brown.prediction.strategies.IPredictionStrategy;
-import brown.prediction.valuation.IValuation;
 import brown.prediction.valuation.MetaVal;
 import brown.prediction.valuation.SimpleValuationBundle;
 import brown.prediction.valuation.ValuePort;
@@ -36,8 +36,13 @@ public class SCPPIndependentDist implements IIndependentPrediction {
   private IIndependentPrediction initial; 
   private Double threshold; 
   private ValuePort vPort; 
-  
+  private MetaVal metaVal; 
   private Integer SIMPLAYERS = 10;
+  
+  private Double MIN = 0.0;
+  private Double MAX = 5.0 * metaVal.getScale();
+  private Integer BINS = 100; 
+    
   
   /**
    * Constructor for SCPPIndependentDist. Here is where inputs for the algorithm
@@ -62,6 +67,7 @@ public class SCPPIndependentDist implements IIndependentPrediction {
     this.iterations = iterations;  
     this.initial = initial; 
     this.threshold = threshold; 
+    this.metaVal = distInfo; 
     this.vPort = new ValuePort(distInfo, initial.getPrediction().getGoods()); 
   }
   
@@ -91,9 +97,18 @@ public class SCPPIndependentDist implements IIndependentPrediction {
   
   private IIndependentPrediction playSelf(Integer numPlayers,
       IIndependentPrediction aPrediction) {
+    //add datatypes
     GoodPriceVector currentHighest = new GoodPriceVector();
     IIndependentPrediction result = new SimpleDistPrediction(); 
     GoodDistVector guess = new GoodDistVector(); 
+    //populate guess
+    for(Good g : aPrediction.getPrediction().getGoods()) {
+      IndependentHistogram possiblePrices = 
+          new IndependentHistogram(MIN, MAX, BINS);
+      guess.add(new GoodDist(g, possiblePrices));
+    }
+    
+    //play self.
     for(int i = 0; i < numGames; i++) {
       for(int j = 0; j < numPlayers; j++) {
        //get valuations
@@ -107,11 +122,18 @@ public class SCPPIndependentDist implements IIndependentPrediction {
             currentHighest.add(g);
         }
       }
+      for(GoodPrice g : currentHighest) {
+        GoodDist corresponding = guess.getGoodDist(g.getGood());
+        IndependentHistogram hist = corresponding.getDist();
+        hist.add(g.getPrice());
+        corresponding.setDist(hist);
+        guess.add(corresponding);
+      }
       //now that we have a winning vector, add it to the goodDist. 
       currentHighest.clear();
     }
-    
-    return null; 
+    result.setPrediction(guess); 
+    return result;
   }
 
   @Override
