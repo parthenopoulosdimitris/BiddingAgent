@@ -7,9 +7,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodPrice;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPrice;
+import brown.prediction.goodprice.GoodPriceVector;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 

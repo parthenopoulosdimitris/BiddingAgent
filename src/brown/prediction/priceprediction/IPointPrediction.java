@@ -1,16 +1,14 @@
 package brown.prediction.priceprediction; 
 
-import java.util.Map;
 
-import brown.generatepredictions.Price;
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodPrice;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Price;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
 
 public interface IPointPrediction extends IPricePrediction {
   
-  public GoodPriceVector getPrediction();
+  public GoodPriceVector<Good, Price> getPrediction();
   
-  public void setPrediction(GoodPriceVector aPrediction);
+  public void setPrediction(GoodPriceVector<Good, Price> aPrediction);
   
 }

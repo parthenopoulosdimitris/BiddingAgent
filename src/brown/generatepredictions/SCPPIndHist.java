@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import brown.interfaces.IBidStrategy;
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.priceprediction.IPricePrediction;
@@ -29,12 +29,12 @@ public class SCPPIndHist implements IIndependentPrediction {
 		 }
 		 pricePrediction=pp;
 	 }
-	 private IndHistogram populateTemp(IBidStrategy bs){
+	 private IndHistogram populateTemp(IBidStrategy bs) {
 		 IndHistogram temp = new IndHistogram(Constants.NUM_GOODS);
 		 for(int j=1; j<NUM_SAMPLES; j++){
 			 for(int l=1; l<Constants.NUM_AGENTS; l++){
 				 Map<Good,Price> bids = bs.getBids();
-				 for(Good good:bids.keySet()){
+				 for(Good good:bids.keySet()) {
 					 double priceValue =temp.getBucket(good, bids.get(good).getPrice()).getPrice();
 					 Price price = new Price(priceValue);
 					 temp.incCount(good,price);

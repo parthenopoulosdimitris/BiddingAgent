@@ -1,12 +1,21 @@
+package brown.prediction.valuation; 
 
-package brown.prediction.valuation;
+import brown.prediction.goodprice.IGood;
+import brown.prediction.goodprice.IPrice;
+import brown.valuable.IValuable;
 
-import java.util.Set;
-
-import brown.prediction.good.Good;
-
+/**
+ * interface for 
+ * @author acoggins
+ *
+ */
 public interface IValuation {
-
-  public SimpleValuation getValuation(Set<Good> goods);
-
+  
+  public IGood getValuable();
+  
+  public IPrice getPrice();
+  
+  public void setPrice(IPrice newPrice);
+  
+  
 }

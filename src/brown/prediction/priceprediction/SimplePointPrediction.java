@@ -1,35 +1,35 @@
 package brown.prediction.priceprediction;
 
-import java.util.Map;
 
-import brown.generatepredictions.Price;
-import brown.prediction.good.GoodPrice;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Price;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
 
 
 
 public class SimplePointPrediction implements IPointPrediction {
 
-  private GoodPriceVector predictions;
+  private GoodPriceVector<Good, Price> predictions;
   
   
   public SimplePointPrediction() {
-    this.predictions = new GoodPriceVector();
+    this.predictions = new GoodPriceVector<Good, Price>();
   }
   
-  public SimplePointPrediction(GoodPriceVector p) {
+  public SimplePointPrediction(GoodPriceVector<Good, Price> p) {
     this.predictions = p;
   }
   
   @Override
-  public GoodPriceVector getPrediction() {
+  public GoodPriceVector<Good, Price> getPrediction() {
     return predictions;
   }
   
   @Override
-  public void setPrediction(GoodPriceVector aPrediction) {
+  public void setPrediction(GoodPriceVector<Good, Price> aPrediction) {
     this.predictions = aPrediction;
-  } 
+  }
+
   
 
 

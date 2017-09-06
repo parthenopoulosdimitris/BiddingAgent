@@ -3,8 +3,8 @@ package brown.interfaces;
 import java.util.Map;
 
 import brown.generatepredictions.Price;
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
 
 public interface IBidStrategy {
 	

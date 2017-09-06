@@ -1,6 +1,8 @@
 package brown.prediction.priceprediction;
 
-import brown.prediction.good.GoodDistVector;
+import brown.prediction.goodprice.Dist;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
 
 /**
  * implementation-level interface for price prediction. 
@@ -12,8 +14,8 @@ import brown.prediction.good.GoodDistVector;
  */
 public interface IIndependentPrediction extends IDistribution { 
 
-  public GoodDistVector getPrediction();
+  public GoodPriceVector<Good, Dist> getPrediction();
   
-  public void setPrediction(GoodDistVector inputPrediction);
+  public void setPrediction(GoodPriceVector<Good, Dist> inputPrediction);
   
 }

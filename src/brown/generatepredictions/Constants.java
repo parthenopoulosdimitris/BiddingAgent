@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.prediction.good.Good;
+import brown.prediction.goodprice.Good;
 
 public abstract class Constants {
 	static final int NUM_GOODS = 8; 

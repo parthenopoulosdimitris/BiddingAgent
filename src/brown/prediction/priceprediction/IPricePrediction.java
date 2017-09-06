@@ -3,9 +3,9 @@ package brown.prediction.priceprediction;
 import java.util.Map;
 
 import brown.generatepredictions.Price;
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodPrice;
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPrice;
+import brown.prediction.goodprice.GoodPriceVector;
 
 /**
  * the top-level interface for price predictions.

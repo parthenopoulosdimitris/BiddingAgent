@@ -1,5 +1,5 @@
 
-package brown.prediction.good;
+package brown.prediction.goodprice;
 
 import brown.assets.value.FullType;
 import brown.assets.value.TradeableType;
@@ -10,7 +10,7 @@ import brown.assets.value.TradeableType;
  * @author acoggins
  *
  */
-public class Good {
+public class Good implements IGood {
   
   public final Integer ID; 
   

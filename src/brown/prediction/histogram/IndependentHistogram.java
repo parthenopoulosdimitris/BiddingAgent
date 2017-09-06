@@ -160,6 +160,10 @@ public class IndependentHistogram implements IHistogram {
     }
   }
   
+  public void setBin(Bin b) {
+    bins.put(b.getID(), b);
+  }
+  
   public void clear() {
     this.bins = new HashMap<Integer, Bin>();
   }

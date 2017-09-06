@@ -25,6 +25,13 @@ public class Bin {
     this.frequency = 0; 
   }
   
+  public Bin(Bin b) {
+    this.ID = b.getID();
+    this.minVal = b.getMin();
+    this.maxVal = b.getMax();
+    this.frequency = b.frequency();
+  }
+  
   /**
    * gets the bin's id
    * @return
@@ -77,6 +84,10 @@ public class Bin {
    */
   public void decrement() {
     frequency--; 
+  }
+  
+  public void setFrequency(Integer newFreq) {
+    frequency = newFreq; 
   }
   
   /**

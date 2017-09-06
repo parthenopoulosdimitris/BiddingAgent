@@ -1,4 +1,4 @@
-package brown.prediction.good;
+package brown.prediction.goodprice;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,17 +10,17 @@ import java.util.Set;
  * Is used for price prediction strategies as well as 
  * actual bidding strategies.
  * @author acoggins
- *
+ *TODO: make more secure.
  */
-public class GoodPriceVector implements Iterable<GoodPrice> {
+public class GoodPriceVector<T, U> implements Iterable<GoodPrice> {
   
-  private Map<Good, Double> priceMap;
+  private Map<IGood, IPrice> priceMap;
   
   /**
    * empty constructor
    */
   public GoodPriceVector() {
-    this.priceMap = new HashMap<Good, Double>();
+    this.priceMap = new HashMap<IGood, IPrice>();
   }
   
   /**
@@ -28,8 +28,8 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @param p
    * an existing GoodPriceVector
    */
-  public GoodPriceVector (GoodPriceVector p) {
-    this.priceMap = new HashMap<Good, Double>();
+  public GoodPriceVector (GoodPriceVector<T, U> p) {
+    this.priceMap = new HashMap<IGood, IPrice>();
     this.addAll(p);
   }
   
@@ -38,15 +38,15 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @param aMap
    * HashMap of Goods to Double.
    */
-  public GoodPriceVector(Map<Good, Double> aMap) {
-    this.priceMap = new HashMap<Good, Double>(aMap);
+  public GoodPriceVector(Map<IGood, IPrice> aMap) {
+    this.priceMap = new HashMap<IGood, IPrice>(aMap);
     }
   
   /**
    * adds a goodprice to the vector.
    * @param val
    */
-  public void add(GoodPrice val) {
+  public void add(GoodPrice<T, U> val) {
     priceMap.put(val.getGood(), val.getPrice());
   }
   
@@ -55,7 +55,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @param good
    * @param price
    */
-  public void add(Good good, Double price) {
+  public void add(IGood good, IPrice price) {
     priceMap.put(good, price);
   }
   
@@ -63,7 +63,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * clears the GoodPriceVector.
    */
   public void clear() {
-    priceMap = new HashMap<Good, Double>();
+    priceMap = new HashMap<IGood, IPrice>();
   }
   
   /**
@@ -73,7 +73,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * a Boolean for contains
    */
-  public Boolean contains(Good good) {
+  public Boolean contains(IGood good) {
     return priceMap.containsKey(good);
   }
   
@@ -84,7 +84,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * a Boolean for contains
    */
-  public Boolean contains(GoodPrice aGood) {
+  public Boolean contains(GoodPrice<T, U> aGood) {
     return priceMap.containsKey(aGood.getGood());
   }
   
@@ -95,8 +95,8 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * GoodPrice associated with that good.
    */
-  public GoodPrice getGoodPrice(Good good) {
-    return new GoodPrice(good, priceMap.get(good));
+  public GoodPrice<T, U> getGoodPrice(IGood good) {
+    return new GoodPrice<T, U>(good, priceMap.get(good));
   }
   
   /**
@@ -104,7 +104,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * all the goods in the vector in a set.
    */
-  public Set<Good> getGoods() {
+  public Set<IGood> getGoods() {
     return priceMap.keySet();
   }
   
@@ -117,7 +117,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * a price associated with a good
    */
-  public Double getOrDefault(Good good, Double defVal) {
+  public IPrice getOrDefault(IGood good, IPrice defVal) {
     if(priceMap.containsKey(good)) {
       return priceMap.get(good);
     }
@@ -140,7 +140,7 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @param goods
    * a map from a good to a double.
    */
-  public void addAll(Map<Good, Double> goods) {
+  public void addAll(Map<IGood, IPrice> goods) {
     priceMap.putAll(goods);
   }
   
@@ -149,8 +149,8 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @param predictions
    * aGoodPriceVector. 
    */
-  public void addAll(GoodPriceVector predictions) {
-    for(GoodPrice p : predictions) {
+  public void addAll(GoodPriceVector<T, U> predictions) {
+    for(GoodPrice<T, U> p : predictions) {
       this.add(p);
     }
   }
@@ -178,10 +178,10 @@ public class GoodPriceVector implements Iterable<GoodPrice> {
    * @return
    * an array of GoodPrice
    */
-  public GoodPrice[] toArray() {
-    GoodPrice[] priceArray = new GoodPrice[this.size()];
+  public GoodPrice<T, U>[] toArray() {
+    GoodPrice<T, U>[] priceArray = new GoodPrice[this.size()];
     int i = 0; 
-    for(Good good : priceMap.keySet()) {
+    for(IGood good : priceMap.keySet()) {
       priceArray[i] = this.getGoodPrice(good);
       i++;
     }

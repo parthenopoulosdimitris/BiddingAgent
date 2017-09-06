@@ -3,7 +3,7 @@ package brown.prediction.priceprediction;
 import java.util.Map;
 
 import brown.generatepredictions.Price;
-import brown.prediction.good.Good;
+import brown.prediction.goodprice.Good;
 
 /**
  * Disribution-level interface for Price predictions.

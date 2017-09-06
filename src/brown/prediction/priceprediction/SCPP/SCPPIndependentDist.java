@@ -1,18 +1,24 @@
 package brown.prediction.priceprediction.SCPP; 
 
 
-import brown.prediction.good.Good;
-import brown.prediction.good.GoodDist;
-import brown.prediction.good.GoodDistVector;
-import brown.prediction.good.GoodPrice;
-import brown.prediction.good.GoodPriceVector;
+import java.util.HashSet;
+import java.util.Set;
+
+import brown.prediction.goodprice.Price;
+import brown.generator.library.NormalGenerator;
+import brown.prediction.goodprice.Bundle;
+import brown.prediction.goodprice.Dist;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPrice;
+import brown.prediction.goodprice.GoodPriceVector;
+import brown.prediction.goodprice.IGood;
+import brown.prediction.histogram.Bin;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.priceprediction.SimpleDistPrediction;
 import brown.prediction.strategies.IPredictionStrategy;
 import brown.prediction.valuation.MetaVal;
-import brown.prediction.valuation.SimpleValuationBundle;
-import brown.prediction.valuation.ValuePort;
+import brown.valuation.library.AdditiveValuation;
 
 /**
  * Gives self-confirming price predictions for a distributional price prediction, 
@@ -34,9 +40,9 @@ public class SCPPIndependentDist implements IIndependentPrediction {
   private Integer numGames; 
   private Integer iterations; 
   private IIndependentPrediction initial; 
-  private Double threshold; 
-  private ValuePort vPort; 
+  private Double threshold;  
   private MetaVal metaVal; 
+  private Integer totalCount;
   private Integer SIMPLAYERS = 10;
   
   private Double MIN = 0.0;
@@ -68,67 +74,127 @@ public class SCPPIndependentDist implements IIndependentPrediction {
     this.initial = initial; 
     this.threshold = threshold; 
     this.metaVal = distInfo; 
-    this.vPort = new ValuePort(distInfo, initial.getPrediction().getGoods()); 
   }
   
   
 
-  //here it would be by far most efficient to treat the goods as totally 
-  //independent.
-  //that means going to the TP valuation and making a valuation for 
-  //each individual good and then sending it over as a simple valuation
-  //bundle with numGoods observations where each observation is just a 
-  //good.
-  //repeatedly sample each good with a montecarlo simulation.
-  //fill up histograms with the information.
+//gets the predictions according to self-confirming price predictions. 
   
   @Override
-  public GoodDistVector getPrediction() {
-    // TODO Auto-generated method stub
+  public GoodPriceVector<Good, Dist> getPrediction() {
+    //set totalCount to 0
+    totalCount = 0; 
     IIndependentPrediction returnPrediction = initial;
-    GoodDistVector returnVector = returnPrediction.getPrediction();
+    GoodPriceVector<Good, Dist> returnVector = returnPrediction.getPrediction();
     Boolean withinThreshold = true; 
+    //a count to be used in updating the histograms.
+    int iterCount = 0; 
     for(int i = 0; i < iterations; i++) {
+      //simulate a series of games to produce a distribution of price predictions per good.
       IIndependentPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
+      //check the threshold condition. 
+      //update returnPrediction based on the decay factor.
+      //need to compute KS statistic for each good.
+      //that is, the point on the distribution that is the greatest distance between the two. 
+      
+      for(GoodPrice<Good, Dist> gp : aGuess.getPrediction()) {
+        GoodPrice<Good, Dist> comparison = returnVector.getGoodPrice(gp.getGood());
+        //retrieve histograms
+        IndependentHistogram first = ((Dist) gp.getPrice()).dist;
+        IndependentHistogram second = ((Dist) comparison.getPrice()).dist;
+        //check for an error. 
+        if (first.getNumBins() != second.getNumBins()) {
+          System.out.println("Error: histogram size mismatch");
+          return null;
+        }
+        //check threshold condition, which in this case is the greatest difference
+        //in bin size per good (approx. of KS statistic). 
+        //TODO: normalize
+        for (int j = 0; j < first.getNumBins(); j++) {
+          Double difference = (double) first.getBinByID(j).frequency() 
+              - (double) second.getBinByID(j).frequency();
+          if (difference > this.threshold) {
+            withinThreshold = false; 
+            break;
+          }
+        }
+      }
+      //if the threshold condition is met, return the current prediction. 
+      if (withinThreshold)
+        return aGuess.getPrediction();
+      //otherwise, update and iterate. 
+      //update using the decay schedule parameter. 
+      Double decay = (((double) iterations) - iterCount + 1.0) / ((double) iterations);
+      //have to update each bin in each histogram.
+      for(GoodPrice<Good, Dist> gp : aGuess.getPrediction()) {
+        GoodPrice<Good, Dist> initGp = returnVector.getGoodPrice(gp.getGood());
+        IndependentHistogram current = ((Dist) gp.getPrice()).dist;
+        IndependentHistogram initial = ((Dist) initGp.getPrice()).dist;
+        IndependentHistogram returnHist = new IndependentHistogram(
+            current.getMinimum(), current.getMaximum(), current.getNumBins());
+        for(Bin b : current.getAllBins()) {
+          Bin corresponding = initial.getBinByID(b.getID());
+          double newFreq =  (decay * (double) b.frequency())
+              + ((1.0 - decay) * (double) corresponding.frequency());
+          Integer newFreqInt = (int) newFreq; 
+          Bin returnBin = new Bin(b);
+          returnBin.setFrequency(newFreqInt);
+          returnHist.setBin(returnBin);
+        }
+        gp.setPrice(new Dist(returnHist));
+      }
+      iterCount++;
     }
-    return null;
+    return returnVector;
   }
 
   
-  private IIndependentPrediction playSelf(Integer numPlayers,
+  private IIndependentPrediction playSelf (Integer numPlayers,
       IIndependentPrediction aPrediction) {
     //add datatypes
-    GoodPriceVector currentHighest = new GoodPriceVector();
+    GoodPriceVector<Good, Price> currentHighest = new GoodPriceVector<Good, Price>();
     IIndependentPrediction result = new SimpleDistPrediction(); 
-    GoodDistVector guess = new GoodDistVector(); 
+    GoodPriceVector<Good, Dist> guess = new GoodPriceVector<Good, Dist>(); 
     //populate guess
-    for(Good g : aPrediction.getPrediction().getGoods()) {
+    Set<IGood> iGoodSet = aPrediction.getPrediction().getGoods();
+    Set<Good> goodSet = (Set) iGoodSet;
+    for(Good g : goodSet) {
       IndependentHistogram possiblePrices = 
           new IndependentHistogram(MIN, MAX, BINS);
-      guess.add(new GoodDist(g, possiblePrices));
+      Dist ppDist = new Dist(possiblePrices);
+      guess.add(new GoodPrice<Good, Dist>(g, ppDist));
     }
     
     //play self.
     for(int i = 0; i < numGames; i++) {
       for(int j = 0; j < numPlayers; j++) {
        //get valuations
-        SimpleValuationBundle indBundle = new SimpleValuationBundle();
-        for(Good g : aPrediction.getPrediction().getGoods()) {
-         indBundle.add(vPort.getIndependentNormal(g));
+        //wtf is a groupvaluationset
+        GoodPriceVector<Bundle, Price> indBundle = new GoodPriceVector<Bundle, Price>();
+        for(Good g : goodSet) {
+          //get an individual valuation of this guy.
+         GoodPrice<Bundle, Price> aGoodPrice = this.getValuation(g);
+         indBundle.add(aGoodPrice);
         }
-        GoodPriceVector aBid = strat.getPrediction(aPrediction, indBundle);
-        for(GoodPrice g : aBid) {
-          if (currentHighest.getGoodPrice(g.getGood()).getPrice() < g.getPrice())
+        GoodPriceVector<Good, Price> aBid = strat.getPrediction(aPrediction, indBundle);
+        for(GoodPrice<Good, Price> g : aBid) {
+          if (((Price) currentHighest.getGoodPrice(g.getGood()).getPrice()).price
+              < ((Price) g.getPrice()).price)
             currentHighest.add(g);
         }
       }
-      for(GoodPrice g : currentHighest) {
-        GoodDist corresponding = guess.getGoodDist(g.getGood());
-        IndependentHistogram hist = corresponding.getDist();
-        hist.add(g.getPrice());
-        corresponding.setDist(hist);
+      //here we update the prediction by adding the winning vector to the histogram. 
+      //takes a few lines with the datatypes I have here.
+      for(GoodPrice<Good, Price> g : currentHighest) {
+        GoodPrice<Good, Dist> corresponding = guess.getGoodPrice(g.getGood());
+        IndependentHistogram hist = ((Dist) corresponding.getPrice()).dist;
+        hist.add(((Price) g.getPrice()).price);
+        //increase the total count of 
+        corresponding.setPrice(new Dist(hist));
         guess.add(corresponding);
       }
+      //increase the total count of goods in a single distribution
+      totalCount++;
       //now that we have a winning vector, add it to the goodDist. 
       currentHighest.clear();
     }
@@ -136,15 +202,22 @@ public class SCPPIndependentDist implements IIndependentPrediction {
     return result;
   }
 
-  @Override
-  public void setPrediction(GoodDistVector inputPrediction) {
-    // TODO Auto-generated method stub
+  //valuation getting code. uses datatypes from the value generator.
+  private GoodPrice<Bundle, Price> getValuation(Good aGood) {
+    brown.valuable.library.Good newGood = new brown.valuable.library.Good(aGood.ID);
+    NormalGenerator norm = new NormalGenerator(metaVal.getValFunction(),
+        metaVal.getMonotonic(), metaVal.getScale());
+    AdditiveValuation addVal = norm.getSingleValuation(newGood);
+    Price newPrice = new Price(addVal.getPrice());
+    Bundle newBundle = new Bundle(new HashSet<Good>());
+    newBundle.bundle.add(aGood);
+    GoodPrice<Bundle, Price> returnGp = new GoodPrice<Bundle, Price>(newBundle, newPrice);
+    return returnGp;
   }
   
-  
-  
-  
-  
-  
+  @Override
+  public void setPrediction(GoodPriceVector inputPrediction) {
+    // TODO Auto-generated method stub
+  }
   
 }

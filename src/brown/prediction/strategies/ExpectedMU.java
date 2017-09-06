@@ -1,8 +1,10 @@
 package brown.prediction.strategies;
 
-import brown.prediction.good.GoodPriceVector;
+import brown.prediction.goodprice.Bundle;
+import brown.prediction.goodprice.Good;
+import brown.prediction.goodprice.GoodPriceVector;
+import brown.prediction.goodprice.Price;
 import brown.prediction.priceprediction.IPricePrediction;
-import brown.prediction.valuation.IValuation;
 
 /**
  * ExpectedMU is a price prediction strategy that gives the expected
@@ -13,11 +15,11 @@ import brown.prediction.valuation.IValuation;
  */
 public class ExpectedMU implements IPredictionStrategy {
 
-  @Override
-  public GoodPriceVector getPrediction(IPricePrediction aPrediction,
-      IValuation aValuation) {
-    // TODO Auto-generated method stub
-    return null;
-  }
+@Override
+public GoodPriceVector<Good, Price> getPrediction(IPricePrediction aPrediction,
+		GoodPriceVector<Bundle, Price> aValuation) {
+	// TODO Auto-generated method stub
+	return null;
+}
   
 }
