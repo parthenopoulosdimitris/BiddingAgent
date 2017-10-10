@@ -1,15 +1,18 @@
 package brown.generatepredictions;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import brown.generator.library.NormalGenerator;
 import brown.interfaces.IBidStrategy;
-import brown.prediction.goodprice.Good;
-import brown.prediction.goodprice.GoodPriceVector;
 import brown.prediction.histogram.IndependentHistogram;
 import brown.prediction.priceprediction.IIndependentPrediction;
 import brown.prediction.priceprediction.IPricePrediction;
 import brown.prediction.strategies.IPredictionStrategy;
+import brown.valuation.library.AdditiveValuation;
+import temp.MetaVal;
 
 public class SCPPIndHist implements IIndependentPrediction {
 	 double alpha =0.1;
@@ -17,8 +20,10 @@ public class SCPPIndHist implements IIndependentPrediction {
 	 int NUM_ITERATIONS=100;
 	 int NUM_SAMPLES=1000;
 	 IPricePrediction pricePrediction = null;
+	 MetaVal distInfo;
 	 
-	 public SCPPIndHist(IBidStrategy bs){
+	 public SCPPIndHist(IBidStrategy bs, MetaVal distInfo){
+	   this.distInfo = distInfo;
 		 IndHistogram pp = new IndHistogram(Constants.NUM_GOODS);
 		 pp.normalize();
 		 IndHistogram temp = new IndHistogram(Constants.NUM_GOODS);
@@ -33,6 +38,7 @@ public class SCPPIndHist implements IIndependentPrediction {
 		 IndHistogram temp = new IndHistogram(Constants.NUM_GOODS);
 		 for(int j=1; j<NUM_SAMPLES; j++){
 			 for(int l=1; l<Constants.NUM_AGENTS; l++){
+			   Map<Good, Double> = getValuations(NUM_GOODS);
 				 Map<Good,Price> bids = bs.getBids();
 				 for(Good good:bids.keySet()) {
 					 double priceValue =temp.getBucket(good, bids.get(good).getPrice()).getPrice();
@@ -57,7 +63,24 @@ public class SCPPIndHist implements IIndependentPrediction {
 		 return pp;
 	 }
 	 
-	 private double testConvergnce(IndHistogram pp, IndHistogram temp){
+	 
+	 private Map<Good, Double> getValuations(int numGoods) {
+	   Set<brown.valuable.library.Good> goods = new HashSet<>();
+	   Map<Good, Double> valuations = new HashMap<Good, Double>();
+	   for(int i = 0; i < numGoods; i++) {
+	     brown.valuable.library.Good newGood = new brown.valuable.library.Good(i);
+	     goods.add(newGood);
+	   }
+	   NormalGenerator norm = new NormalGenerator(distInfo.getValFunction(),
+	        distInfo.getMonotonic(), distInfo.getScale());
+	   AdditiveValuationSet addVal = norm.getAdditiveValuation(new Bundle(goods));
+	   for(brown.valuable.library.Good g : addVal.getMap().keySet()) {
+	     valuations.put(g.ID, addVal.getMap().get(g));
+	   }
+	   return valuations;
+	 }
+	 
+	 private double testConvergence(IndHistogram pp, IndHistogram temp){
 		 Double error = Double.NEGATIVE_INFINITY;
 		 Double totalError=0.0;
 		 for(Good good: pp.getMap().keySet()){
@@ -70,10 +93,6 @@ public class SCPPIndHist implements IIndependentPrediction {
 		 return totalError;
 	 }
 	 
-	@Override
-	public GoodPriceVector getPrediction() {
-		return pricePrediction;
-	}
   @Override
   public Map<Good, Price> getMeanPricePrediction() {
     // TODO Auto-generated method stub

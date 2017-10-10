@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import brown.agent.Agent;
-import brown.prediction.goodprice.Good;
+import brown.valuable.library.Tradeable;
 
 public abstract class Constants {
 	static final int NUM_GOODS = 8; 
@@ -12,7 +12,10 @@ public abstract class Constants {
 	static final int NUM_ITERATIONS=100;
 	static final double MAX_VAL=1.0;
 	static final double MIN_VAL=0.0;
+	//given
 	static final int NUM_AGENTS=8;
-	static final Set<Good> goodSet= new HashSet<Good>();
+	//given
+	static final Set<Tradeable> goodSet= new HashSet<Tradeable>();
+	//given
 	static final Set<Agent> agentSet = new HashSet<Agent>();
 }
