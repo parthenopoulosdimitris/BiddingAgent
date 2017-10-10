@@ -1,6 +1,6 @@
 package temp;
 
-import temp.histograms.IndependentHistogram;
+import temp.histograms.JointHistogram;
 
 /**
  * an Independent histogram is wrapped to form an independent 
@@ -8,11 +8,11 @@ import temp.histograms.IndependentHistogram;
  * @author andrew
  *
  */
-public class IndDist {
+public class JointDist {
   
-  public final IndependentHistogram dist;
+  public final JointHistogram dist;
   
-  public IndDist(IndependentHistogram dist) {
+  public JointDist(JointHistogram dist) {
     this.dist = dist; 
   }
 }

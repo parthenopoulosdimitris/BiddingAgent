@@ -1,10 +1,20 @@
 package temp.predictors;
 
+import java.util.Map;
+import java.util.Set;
+
+import brown.valuable.library.Tradeable;
+import temp.JointDist;
 import temp.MetaVal;
 import temp.maximizers.IBundleMaximizer;
 import temp.predictions.IIndependentPrediction;
 import temp.predictions.IJointPrediction;
 
+/**
+ * SCPP predictor algorithm, for the case of goods with exposure
+ * @author andrew
+ *
+ */
 public class SCPPJointDist implements IJointPredictor {
   
   private IJointPrediction initial; 
@@ -29,9 +39,11 @@ public class SCPPJointDist implements IJointPredictor {
   }
   
   /**
-   * this is where the user needs to get creative.
+   * this is where I need to get creative.
    */
   public IJointPrediction getPrediction() {
+    IJointPrediction returnPrediction = initial; 
+    Map<Set<Tradeable>, JointDist> returnVector = returnPrediction.getDistPrediction();
     return null;
   }
 }

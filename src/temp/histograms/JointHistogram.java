@@ -9,7 +9,7 @@ import java.util.Map;
  * @author andrew
  *
  */
-public class JointHistogram implements IHistogram{
+public class JointHistogram implements IHistogram  {
   
   private Integer numGoods;
   private Double[] minimumValue; 
@@ -73,7 +73,7 @@ public class JointHistogram implements IHistogram{
      this.bins = new HashMap<>();
    }
    catch (ArrayIndexOutOfBoundsException e){ 
-     System.out.println("Error: input array out of bounds" + e);
+     System.out.println("Error: input array out of bounds. " + e);
    } 
   }
   
