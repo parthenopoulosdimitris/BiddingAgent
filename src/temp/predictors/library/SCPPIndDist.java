@@ -1,38 +1,34 @@
-package temp.predictors;
+package temp.predictors.library;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
-import brown.generator.library.NormalGenerator;
 import brown.valuable.library.Tradeable;
 import brown.valuable.library.Value;
 import brown.valuation.library.AdditiveValuation;
-import temp.IndDist;
-import temp.MetaVal;
 import temp.histograms.IndependentHistogram;
-import temp.maximizers.IAddMaxDist;
-import temp.predictions.IIndependentPrediction;
-import temp.predictions.SimpleIndPrediction;
+import temp.maximizers.IMaxDist;
+import temp.predictions.library.SimpleIndPrediction;
+import temp.predictors.IDistributionPredictor;
+import temp.price.IndDist;
 
 //TODO: normalize, smooth? put the generator in the metaval, change the MAX thing? (slash scale?)
-public class SCPPIndDist implements IIndependentPredictor {
+public class SCPPIndDist implements IDistributionPredictor {
   
-  private IIndependentPrediction initial; 
-  private IAddMaxDist strat; 
+  private SimpleIndPrediction initial; 
+  private IMaxDist strat; 
   private Integer numGames; 
   private Integer numIterations; 
   private Double pdThresh; 
-  private MetaVal distInfo; 
+  private AdditiveValuation distInfo; 
   private Integer SIMPLAYERS = 10; 
   
   private Double MIN = 0.0;
-  //this seems problematic
-  private Double MAX = 5.0 * distInfo.getScale();
+  private Double MAX = 5.0;
   private Integer BINS = 100; 
   
-  public SCPPIndDist(IAddMaxDist strat, IIndependentPrediction initial,
-      Integer numGames, Integer numIterations, Double pdThresh, MetaVal distInfo) {
+  public SCPPIndDist(IMaxDist strat, SimpleIndPrediction initial,
+      Integer numGames, Integer numIterations, Double pdThresh, AdditiveValuation distInfo) {
     this.strat = strat; 
     this.initial = initial;
     this.numGames = numGames; 
@@ -41,18 +37,18 @@ public class SCPPIndDist implements IIndependentPredictor {
     this.distInfo = distInfo; 
   }
   
-  public IIndependentPrediction getPrediction() {
-    IIndependentPrediction returnPrediction = initial;
-    Map<Tradeable, IndDist> returnVector = returnPrediction.getDistPrediction();
+  public SimpleIndPrediction getPrediction() {
+    SimpleIndPrediction returnPrediction = initial;
+    Map<Tradeable, IndDist> returnVector = returnPrediction.getPrediction().rep;
     Boolean withinThreshold = true; 
     int iterCount = 0; 
     for(int i = 0; i < numIterations; i++) {
-      IIndependentPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
-      Map<Tradeable, IndDist> guessMap = aGuess.getDistPrediction();
-      Map<Tradeable, IndDist> initMap = returnPrediction.getDistPrediction();
+      SimpleIndPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
+      Map<Tradeable, IndDist> guessMap = aGuess.getPrediction().rep;
+      Map<Tradeable, IndDist> initMap = returnPrediction.getPrediction().rep;
       for(Tradeable t : guessMap.keySet()) {
-        Map<Integer, Integer> first = guessMap.get(t).dist.getHistogram();
-        Map<Integer, Integer> second = initMap.get(t).dist.getHistogram();
+        Map<Integer, Integer> first = guessMap.get(t).rep.getHistogram();
+        Map<Integer, Integer> second = initMap.get(t).rep.getHistogram();
         if (first.size() != second.size()) {
           System.out.println("Error: histogram size mismatch");
           return null;
@@ -71,8 +67,8 @@ public class SCPPIndDist implements IIndependentPredictor {
         return aGuess;
       Double decay = (((double) numIterations) - iterCount + 1.0) / ((double) numIterations);
       for(Tradeable t : guessMap.keySet()) {
-        IndependentHistogram init = initMap.get(t).dist;
-        IndependentHistogram guess = guessMap.get(t).dist;
+        IndependentHistogram init = initMap.get(t).rep;
+        IndependentHistogram guess = guessMap.get(t).rep;
         IndependentHistogram returnHist = new IndependentHistogram(
             init.getMin(), init.getMax(), init.getHistogram().size());
         for(Integer bin : init.getHistogram().keySet()) {
@@ -87,13 +83,13 @@ public class SCPPIndDist implements IIndependentPredictor {
     return new SimpleIndPrediction(returnVector);
   }
 
-  private IIndependentPrediction playSelf (Integer numPlayers,
-      IIndependentPrediction aPrediction) {
+  private SimpleIndPrediction playSelf (Integer numPlayers,
+      SimpleIndPrediction aPrediction) {
     //add datatypes
     Map<Tradeable, Double> currentHighest = new HashMap<Tradeable, Double>();
     Map<Tradeable, IndDist> guess = new HashMap<Tradeable, IndDist>(); 
     //populate guess
-    Map<Tradeable, IndDist> goods = aPrediction.getDistPrediction();
+    Map<Tradeable, IndDist> goods = aPrediction.getPrediction().rep;
     for(Tradeable t : goods.keySet()) {
       IndependentHistogram possiblePrices = 
           new IndependentHistogram(MIN, MAX, BINS);
@@ -103,7 +99,7 @@ public class SCPPIndDist implements IIndependentPredictor {
     //play self.
     for(int i = 0; i < numGames; i++) {
       for(int j = 0; j < numPlayers; j++) {
-        Map<Tradeable, Value> aVal = this.getValuation(goods.keySet());
+        Map<Tradeable, Value> aVal = this.distInfo.getValuation(goods.keySet()).vals;
         //this is localbid?
         Map<Tradeable, Double> aBid = strat.getBids(aVal, aPrediction);
         for(Tradeable t : aBid.keySet()) {
@@ -113,21 +109,12 @@ public class SCPPIndDist implements IIndependentPredictor {
       }
      //update
       for(Tradeable t : currentHighest.keySet()) {
-        IndependentHistogram corresponding = guess.get(t).dist;
+        IndependentHistogram corresponding = guess.get(t).rep;
         corresponding.increment(currentHighest.get(t));
         guess.put(t, new IndDist(corresponding));
       } 
       currentHighest.clear();
     }
     return new SimpleIndPrediction(guess);
-  }
-
-  private Map<Tradeable, Value> getValuation(Set<Tradeable> goods) { 
-    //this seems problematic- should specify generator in metaval
-    //use distribution type.
-    NormalGenerator norm = new NormalGenerator(distInfo.getValFunction(), distInfo.getScale());
-    AdditiveValuation valuation = new AdditiveValuation(norm, goods);
-    return valuation.getValuation(goods);
-  }
-  
+  } 
 }

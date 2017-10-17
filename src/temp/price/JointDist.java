@@ -1,4 +1,4 @@
-package temp;
+package temp.price;
 
 import temp.histograms.JointHistogram;
 
@@ -10,9 +10,9 @@ import temp.histograms.JointHistogram;
  */
 public class JointDist {
   
-  public final JointHistogram dist;
+  public final JointHistogram rep;
   
   public JointDist(JointHistogram dist) {
-    this.dist = dist; 
+    this.rep = dist; 
   }
 }

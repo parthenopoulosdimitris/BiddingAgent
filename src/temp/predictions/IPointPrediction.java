@@ -3,9 +3,10 @@ package temp.predictions;
 import java.util.Map;
 
 import brown.valuable.library.Tradeable;
+import temp.price.Price;
 
-public interface IPointPrediction {
+
+
+public interface IPointPrediction extends IPricePrediction {
   
-  public Map<Tradeable, Double> getPrediction();
-
 }

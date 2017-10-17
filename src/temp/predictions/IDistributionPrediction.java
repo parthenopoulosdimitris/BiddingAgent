@@ -1,7 +1,12 @@
 package temp.predictions;
 
 
-public interface IDistributionPrediction {
+import temp.representation.APriceRep;
+
+public interface IDistributionPrediction extends IPricePrediction {
   
+  public APriceRep getMeanPrediction();
   
+  public APriceRep getRandomPrediction();
+      
 }

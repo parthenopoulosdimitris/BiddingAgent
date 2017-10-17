@@ -1,6 +1,5 @@
 package temp.maximizers;
 
-import temp.bidstrategies.IBidStrategy;
 
 /**localbid-like thing.
  * 

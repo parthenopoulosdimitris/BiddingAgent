@@ -1,5 +1,9 @@
 package temp.predictors;
 
-public interface IDistributionPredictor extends IPredictor{
+import temp.predictions.IDistributionPrediction;
+
+public interface IDistributionPredictor extends IPredictor {
+  
+  public IDistributionPrediction getPrediction();
   
 }

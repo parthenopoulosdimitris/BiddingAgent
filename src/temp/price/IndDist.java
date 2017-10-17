@@ -1,4 +1,4 @@
-package temp;
+package temp.price;
 
 import temp.histograms.IndependentHistogram;
 
@@ -10,9 +10,9 @@ import temp.histograms.IndependentHistogram;
  */
 public class IndDist {
   
-  public final IndependentHistogram dist;
+  public final IndependentHistogram rep;
   
   public IndDist(IndependentHistogram dist) {
-    this.dist = dist; 
+    this.rep = dist; 
   }
 }

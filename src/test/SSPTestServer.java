@@ -68,7 +68,7 @@ public class SSPTestServer {
   private Map<Tradeable, Value> getValuation(Set<Tradeable> goods) { 
     NormalGenerator norm = new NormalGenerator(distInfo.getValFunction(), distInfo.getScale());
     AdditiveValuation valuation = new AdditiveValuation(norm, goods);
-    return valuation.getValuation(goods);
+    return valuation.getValuation(goods).vals;
   }
   
   public static void main(String[] args) throws AgentCreationException {
