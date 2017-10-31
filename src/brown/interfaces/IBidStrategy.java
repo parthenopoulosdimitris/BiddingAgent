@@ -3,7 +3,7 @@ package brown.interfaces;
 import java.util.Map;
 import java.util.Set;
 
-import brown.generatepredictions.IPricePrediction;
+import temp.predictions.IPricePrediction;
 import brown.generatepredictions.Price;
 import brown.valuable.library.Tradeable;
 

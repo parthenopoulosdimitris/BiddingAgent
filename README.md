@@ -1,3 +1,2 @@
-# BiddingAgent
-
-Implementing Agents with Self-confirming price predictions, intended to be used with lccodes/TradingPlatform. 
+# ValueGenerator
+In the trading platform universe, is responsible for generating valuations over tradeable goods. 
