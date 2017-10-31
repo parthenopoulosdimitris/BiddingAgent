@@ -2,6 +2,7 @@ package temp.predictors.library;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import brown.valuable.library.Tradeable;
 import brown.valuable.library.Value;
@@ -39,13 +40,14 @@ public class SCPPIndDist implements IDistributionPredictor {
   
   public SimpleIndPrediction getPrediction() {
     SimpleIndPrediction returnPrediction = initial;
-    Map<Tradeable, IndDist> returnVector = returnPrediction.getPrediction().rep;
+    Set<Tradeable> initGoods = returnPrediction.getGoods();
+    Map<Tradeable, IndDist> returnVector = returnPrediction.getPrediction(initGoods).rep;
     Boolean withinThreshold = true; 
     int iterCount = 0; 
     for(int i = 0; i < numIterations; i++) {
       SimpleIndPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
-      Map<Tradeable, IndDist> guessMap = aGuess.getPrediction().rep;
-      Map<Tradeable, IndDist> initMap = returnPrediction.getPrediction().rep;
+      Map<Tradeable, IndDist> guessMap = aGuess.getPrediction(initGoods).rep;
+      Map<Tradeable, IndDist> initMap = returnPrediction.getPrediction(initGoods).rep;
       for(Tradeable t : guessMap.keySet()) {
         Map<Integer, Integer> first = guessMap.get(t).rep.getHistogram();
         Map<Integer, Integer> second = initMap.get(t).rep.getHistogram();
@@ -89,7 +91,7 @@ public class SCPPIndDist implements IDistributionPredictor {
     Map<Tradeable, Double> currentHighest = new HashMap<Tradeable, Double>();
     Map<Tradeable, IndDist> guess = new HashMap<Tradeable, IndDist>(); 
     //populate guess
-    Map<Tradeable, IndDist> goods = aPrediction.getPrediction().rep;
+    Map<Tradeable, IndDist> goods = aPrediction.getPrediction(aPrediction.getGoods()).rep;
     for(Tradeable t : goods.keySet()) {
       IndependentHistogram possiblePrices = 
           new IndependentHistogram(MIN, MAX, BINS);

@@ -1,7 +1,7 @@
 package temp.predictions.library;
 
 import java.util.Map;
-
+import java.util.Set;
 
 import brown.valuable.library.Tradeable;
 import temp.predictions.IPointPrediction;
@@ -17,8 +17,12 @@ public class SimplePointPrediction implements IPointPrediction {
   }
   
   @Override
-  public PointRep getPrediction() {
+  public PointRep getPrediction(Set<Tradeable> goods) {
     return new PointRep(this.prediction);
+  }
+  
+  public Set<Tradeable> getGoods() {
+    return this.prediction.keySet();
   }
 
 
