@@ -45,7 +45,6 @@ public class SCPPJointDist implements IDistributionPredictor {
    */
   public SimpleJointPrediction getPrediction() {
      SimpleJointPrediction returnPrediction = initial; 
-    Map<Set<Tradeable>, JointDist> returnVector = returnPrediction.getPrediction().rep;
     return null;
   }
 }

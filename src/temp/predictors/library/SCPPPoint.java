@@ -52,11 +52,12 @@ public class SCPPPoint implements IPointPredictor {
   public SimplePointPrediction getPrediction() {
     SimplePointPrediction returnPrediction = initial; 
     //this can be the initial. 
-    Map<Tradeable, Price> returnVector = returnPrediction.getPrediction().rep;
+    Set<Tradeable> initGoods = returnPrediction.getGoods(); 
+    Map<Tradeable, Price> returnVector = returnPrediction.getPrediction(initGoods).rep;
     Boolean withinThreshold = true; 
     for(int i = 0; i < numIterations; i++) {
       SimplePointPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
-      Map<Tradeable, Price> guessVector = aGuess.getPrediction().rep;
+      Map<Tradeable, Price> guessVector = aGuess.getPrediction(initGoods).rep;
       for(Tradeable t : guessVector.keySet()) {
         if((guessVector.get(t).rep - returnVector.get(t).rep) > pdThresh) {
           withinThreshold = false; 
@@ -81,12 +82,12 @@ public class SCPPPoint implements IPointPredictor {
     Map<Tradeable, Price> guess = new HashMap<Tradeable, Price>();
     Map<Tradeable, Double> currentHighest = new HashMap<Tradeable, Double>();
     for(int i = 0; i < numGames; i++) {
-      for(Tradeable t : aPrediction.getPrediction().rep.keySet()) {
+      for(Tradeable t : aPrediction.getPrediction(aPrediction.getGoods()).rep.keySet()) {
         guess.put(t, new Price(0.0));
         currentHighest.put(t, 0.0);
       }
       for(int j = 0; j < simPlayers; j++) {
-        Set<Tradeable> b = this.initial.getPrediction().rep.keySet();
+        Set<Tradeable> b = this.initial.getPrediction(aPrediction.getGoods()).rep.keySet();
         Map<Tradeable, Value> valuation = this.metaVal.getValuation(b).vals;
         Map<Tradeable, Double> aBid = strat.getBids(valuation, aPrediction);
       for(Tradeable t : aBid.keySet()) {

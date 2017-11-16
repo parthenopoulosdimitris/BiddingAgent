@@ -2,6 +2,7 @@ package temp.predictions.library;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 import brown.valuable.library.Tradeable;
 import temp.predictions.IDistributionPrediction;
@@ -20,22 +21,25 @@ public class SimpleIndPrediction implements IDistributionPrediction {
   }
 
   @Override
-  public PointRep getMeanPrediction() {
+  public PointRep getMeanPrediction(Set<Tradeable> goods) {
     // TODO Auto-generated method stub
     return null;
   }
 
   @Override
-  public PointRep getRandomPrediction() {
+  public PointRep getRandomPrediction(Set<Tradeable> goods) {
     // TODO Auto-generated method stub
     return null;
   }
   
   @Override
-  public IndRep getPrediction() {
+  public IndRep getPrediction(Set<Tradeable> goods) {
     return null; 
   }
 
+  public Set<Tradeable> getGoods() { 
+    return this.prediction.keySet();
+  }
 
 }
 
