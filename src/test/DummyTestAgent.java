@@ -25,7 +25,6 @@ public class DummyTestAgent extends TestAgent {
     return ret;
   }
 
-  @Override
   public Map<Tradeable, Double>
       onTestSSBundle(Map<Set<Tradeable>, Value> arg0) {
     // TODO Auto-generated method stub

@@ -3,15 +3,14 @@ package temp.agent;
 
 
 import brown.agent.Agent;
+import brown.channels.library.CDAAgentChannel;
 import brown.exceptions.AgentCreationException;
-import brown.markets.ContinuousDoubleAuction;
 import brown.messages.Ack;
 import brown.messages.BankUpdate;
 import brown.messages.auctions.BidRequest;
 import brown.messages.trades.NegotiateRequest;
 import brown.setup.Logging;
 import brown.setup.Setup;
-import temp.MetaVal;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
 
@@ -40,21 +39,6 @@ public abstract class MaxPredictAgent extends Agent {
     super(host, port, gameSetup);
   }
   
-  /**
-   * constructor with distributional info. 
-   * @param host
-   * @param port
-   * @param gameSetup
-   * @param max
-   * @param pred
-   * @param distInfo
-   * @throws AgentCreationException
-   */
-  public MaxPredictAgent(String host, int port, Setup gameSetup,
-      IMaximizer max, IPredictor pred, MetaVal distInfo)
-      throws AgentCreationException {
-    super(host, port, gameSetup);
-  }
   
   @Override
   public void onAck(Ack message) {
@@ -72,7 +56,7 @@ public abstract class MaxPredictAgent extends Agent {
   }
 
   @Override
-  public void onContinuousDoubleAuction(ContinuousDoubleAuction arg0) {
+  public void onContinuousDoubleAuction(CDAAgentChannel arg0) {
     // TODO Auto-generated method stub
   }
 

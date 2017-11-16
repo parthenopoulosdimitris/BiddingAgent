@@ -1,17 +1,15 @@
 package temp.agent;
 
-import java.util.HashMap;
-import java.util.Map;
 
-
+import brown.channels.library.SimpleAuctionChannel;
 import brown.exceptions.AgentCreationException;
-import brown.markets.SimpleAuction;
 import brown.messages.Registration;
+import brown.messages.ValuationRegistration;
 import brown.messages.markets.GameReport;
-import brown.registration.ValuationRegistration;
 import brown.setup.Logging;
 import brown.setup.Setup;
-import brown.valuable.library.Tradeable;
+import brown.valuation.library.AdditiveValuation;
+import brown.valuationrepresentation.SimpleValuation;
 import temp.MetaVal;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
@@ -22,8 +20,9 @@ import temp.predictors.IPredictor;
  *
  */
 public class MaxPredictDemo extends MaxPredictAgent {
-
-  protected Map<Tradeable, Double> myValuation;
+  protected SimpleValuation myValuation;
+  protected AdditiveValuation allValuations;
+  
   private IMaximizer maximizer; 
   private IPredictor predictor; 
   private MetaVal distInfo; 
@@ -31,28 +30,19 @@ public class MaxPredictDemo extends MaxPredictAgent {
   public MaxPredictDemo(String host, int port, Setup gameSetup,
       IMaximizer max, IPredictor pred) throws AgentCreationException {
     super(host, port, gameSetup, max, pred);
-    this.myValuation = new HashMap<Tradeable, Double>();
     this.maximizer = max;
     this.predictor = pred;
-  }
-  
-  public MaxPredictDemo(String host, int port, Setup gameSetup,
-      IMaximizer max, IPredictor pred, MetaVal distInfo)
-          throws AgentCreationException {
-    super(host, port, gameSetup, max, pred);
-    this.myValuation = new HashMap<Tradeable, Double>();
-    this.maximizer = max;
-    this.predictor = pred;
-    this.distInfo = distInfo;
   }
 
+  
+
   @Override
-  public void onSimpleSealed(SimpleAuction arg0) {
-    // fill in auction operation here!
+  public void onSimpleSealed(SimpleAuctionChannel arg0) {
+    // fill in auction operation here
   }
   
   @Override
-  public void onSimpleOpenOutcry(SimpleAuction arg0) {
+  public void onSimpleOpenOutcry(SimpleAuctionChannel arg0) {
     // TODO Auto-generated method stub
     
   }
@@ -66,9 +56,15 @@ public class MaxPredictDemo extends MaxPredictAgent {
   @Override
   public void onRegistration(Registration registration) {
     super.onRegistration(registration);
-    ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
-    this.myValuation.putAll(valuationRegistration.getValues());
-    Logging.log("[+] new XOR values: " + valuationRegistration.getValues());
+    if(registration instanceof ValuationRegistration) {
+      ValuationRegistration valuationRegistration = (ValuationRegistration) registration;
+      this.myValuation = (SimpleValuation) valuationRegistration.getValuation();
+      this.allValuations = (AdditiveValuation) valuationRegistration.getDistribution();
+      Logging.log("[+] new values: " + valuationRegistration.getValuation());
+    }
+    else {
+      Logging.log("ERROR: Expected valuation registration");
+    }
   }
   
 }
