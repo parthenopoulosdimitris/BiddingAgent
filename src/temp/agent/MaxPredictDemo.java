@@ -1,15 +1,15 @@
 package temp.agent;
 
 
-import brown.channels.library.SimpleAuctionChannel;
+import brown.channels.agent.library.SimpleAgentChannel;
 import brown.exceptions.AgentCreationException;
-import brown.messages.Registration;
-import brown.messages.ValuationRegistration;
-import brown.messages.markets.GameReport;
+import brown.messages.library.GameReport;
+import brown.messages.library.Registration;
+import brown.messages.library.ValuationRegistration;
+import brown.setup.ISetup;
 import brown.setup.Logging;
-import brown.setup.Setup;
-import brown.valuation.library.AdditiveValuation;
-import brown.valuationrepresentation.SimpleValuation;
+import brown.value.valuation.library.AdditiveValuation;
+import brown.value.valuationrepresentation.library.SimpleValuation;
 import temp.MetaVal;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
@@ -27,30 +27,11 @@ public class MaxPredictDemo extends MaxPredictAgent {
   private IPredictor predictor; 
   private MetaVal distInfo; 
   
-  public MaxPredictDemo(String host, int port, Setup gameSetup,
+  public MaxPredictDemo(String host, int port, ISetup gameSetup,
       IMaximizer max, IPredictor pred) throws AgentCreationException {
     super(host, port, gameSetup, max, pred);
     this.maximizer = max;
     this.predictor = pred;
-  }
-
-  
-
-  @Override
-  public void onSimpleSealed(SimpleAuctionChannel arg0) {
-    // fill in auction operation here
-  }
-  
-  @Override
-  public void onSimpleOpenOutcry(SimpleAuctionChannel arg0) {
-    // TODO Auto-generated method stub
-    
-  }
-  
-  @Override
-  public void onMarketUpdate(GameReport arg0) {
-    //TODO: log market outcome
-    Logging.log("Market outcome:"); 
   }
   
   @Override
@@ -65,6 +46,30 @@ public class MaxPredictDemo extends MaxPredictAgent {
     else {
       Logging.log("ERROR: Expected valuation registration");
     }
+  }
+
+
+
+  @Override
+  public void onMarketUpdate(GameReport arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  @Override
+  public void onSimpleOpenOutcry(SimpleAgentChannel arg0) {
+    // TODO Auto-generated method stub
+    
+  }
+
+
+
+  @Override
+  public void onSimpleSealed(SimpleAgentChannel arg0) {
+    // TODO Auto-generated method stub
+    
   }
   
 }

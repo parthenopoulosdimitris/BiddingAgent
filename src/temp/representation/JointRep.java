@@ -3,7 +3,7 @@ package temp.representation;
 import java.util.Map;
 import java.util.Set;
 
-import brown.valuable.library.Tradeable;
+import brown.tradeable.library.Tradeable;
 import temp.price.JointDist;
 
 public class JointRep extends APriceRep{

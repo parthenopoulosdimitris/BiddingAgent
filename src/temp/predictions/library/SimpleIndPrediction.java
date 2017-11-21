@@ -4,11 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.valuable.library.Tradeable;
+import brown.tradeable.library.Tradeable;
 import temp.predictions.IDistributionPrediction;
 import temp.price.IndDist;
-import temp.price.Price;
-import temp.representation.APriceRep;
 import temp.representation.IndRep;
 import temp.representation.PointRep;
 

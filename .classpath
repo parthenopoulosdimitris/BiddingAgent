@@ -2,8 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/jars/kryonet-2.21-all.jar"/>
-	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/jars/valuegenerator.jar"/>
-	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/jars/TradingPlatform.jar"/>
+	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/jars/kryonet-2.21-all.jar"/>
+	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/jars/TP.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

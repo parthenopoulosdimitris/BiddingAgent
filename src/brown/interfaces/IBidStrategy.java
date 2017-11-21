@@ -5,7 +5,7 @@ import java.util.Set;
 
 import temp.predictions.IPricePrediction;
 import brown.generatepredictions.Price;
-import brown.valuable.library.Tradeable;
+import brown.tradeable.library.Tradeable;
 
 public interface IBidStrategy {
 	

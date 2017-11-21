@@ -3,8 +3,8 @@ package temp.bidstrategies;
 import java.util.Map;
 import java.util.Set;
 
-import brown.valuable.library.Tradeable;
-import brown.valuable.library.Value;
+import brown.tradeable.library.Tradeable;
+import brown.value.valuable.library.Value;
 import temp.predictions.IPricePrediction;
 
 public interface IBidStrategy {
