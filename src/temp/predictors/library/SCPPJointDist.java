@@ -3,8 +3,7 @@ package temp.predictors.library;
 import java.util.Map;
 import java.util.Set;
 
-import brown.valuable.library.Tradeable;
-import brown.valuation.library.BundleValuation;
+import brown.value.valuation.library.BundleValuation;
 import temp.MetaVal;
 import temp.maximizers.IMaxDist;
 import temp.predictions.IDistributionPrediction;

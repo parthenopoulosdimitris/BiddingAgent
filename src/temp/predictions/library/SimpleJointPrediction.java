@@ -3,7 +3,7 @@ package temp.predictions.library;
 import java.util.Map;
 import java.util.Set;
 
-import brown.valuable.library.Tradeable;
+import brown.tradeable.library.Tradeable;
 import temp.predictions.IDistributionPrediction;
 import temp.price.JointDist;
 import temp.representation.JointRep;

@@ -2,15 +2,15 @@ package temp.agent;
 
 
 
-import brown.agent.Agent;
-import brown.channels.library.CDAAgentChannel;
+import brown.agent.AbsAgent;
+import brown.channels.agent.library.CDAAgentChannel;
 import brown.exceptions.AgentCreationException;
-import brown.messages.Ack;
-import brown.messages.BankUpdate;
-import brown.messages.auctions.BidRequest;
-import brown.messages.trades.NegotiateRequest;
+import brown.messages.library.Ack;
+import brown.messages.library.BankUpdate;
+import brown.messages.library.BidRequest;
+import brown.messages.library.NegotiateRequest;
+import brown.setup.ISetup;
 import brown.setup.Logging;
-import brown.setup.Setup;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
 
@@ -22,7 +22,7 @@ import temp.predictors.IPredictor;
  * @author andrew
  *
  */
-public abstract class MaxPredictAgent extends Agent {
+public abstract class MaxPredictAgent extends AbsAgent {
 
   /**
    * constructor without distributional info.
@@ -33,7 +33,7 @@ public abstract class MaxPredictAgent extends Agent {
    * @param pred
    * @throws AgentCreationException
    */
-  public MaxPredictAgent(String host, int port, Setup gameSetup,
+  public MaxPredictAgent(String host, int port, ISetup gameSetup,
       IMaximizer max, IPredictor pred)
       throws AgentCreationException {
     super(host, port, gameSetup);

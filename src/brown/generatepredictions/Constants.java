@@ -3,8 +3,9 @@ package brown.generatepredictions;
 import java.util.HashSet;
 import java.util.Set;
 
-import brown.agent.Agent;
-import brown.valuable.library.Tradeable;
+import brown.agent.AbsAgent;
+import brown.tradeable.library.Tradeable;
+
 
 public abstract class Constants {
 	static final int NUM_GOODS = 8; 
@@ -17,5 +18,5 @@ public abstract class Constants {
 	//given
 	static final Set<Tradeable> goodSet= new HashSet<Tradeable>();
 	//given
-	static final Set<Agent> agentSet = new HashSet<Agent>();
+	static final Set<AbsAgent> agentSet = new HashSet<AbsAgent>();
 }
