@@ -6,6 +6,7 @@ import java.util.Set;
 import brown.valuable.library.Tradeable;
 import brown.valuable.library.Value;
 import temp.predictions.IPricePrediction;
+//TODO: a bid strategy is a maximizer.
 
 public interface IBidStrategy {
   

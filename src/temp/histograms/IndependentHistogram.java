@@ -6,13 +6,14 @@ import java.util.Map;
 /*
  * the bins implementation may cause errors.
  */
-public class IndependentHistogram implements IHistogram{
+public class IndependentHistogram implements IHistogram {
   
   private Double minimumValue; 
   private Double maximumValue; 
   private Double binSize;
   private Integer numBins;
   private Map<Integer, Integer> bins;
+  //TODO: normalize
   
   public IndependentHistogram(Double minVal, Double maxVal,
       Integer numBins) {
