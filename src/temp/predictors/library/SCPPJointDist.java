@@ -4,7 +4,6 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.value.valuation.library.BundleValuation;
-import temp.MetaVal;
 import temp.maximizers.IMaxDist;
 import temp.predictions.IDistributionPrediction;
 import temp.predictions.library.SimpleJointPrediction;
