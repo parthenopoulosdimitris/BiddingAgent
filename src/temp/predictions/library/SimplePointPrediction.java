@@ -3,25 +3,25 @@ package temp.predictions.library;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.library.Tradeable;
+import brown.tradeable.ITradeable;
 import temp.predictions.IPointPrediction;
 import temp.price.Price;
 import temp.representation.PointRep;
 
 public class SimplePointPrediction implements IPointPrediction {
   
-  private Map<Tradeable, Price> prediction;
+  private Map<ITradeable, Price> prediction;
   
-  public SimplePointPrediction(Map<Tradeable, Price> prediction) {
+  public SimplePointPrediction(Map<ITradeable, Price> prediction) {
       this.prediction = prediction;  
   }
   
   @Override
-  public PointRep getPrediction(Set<Tradeable> goods) {
+  public PointRep getPrediction(Set<ITradeable> goods) {
     return new PointRep(this.prediction);
   }
   
-  public Set<Tradeable> getGoods() {
+  public Set<ITradeable> getGoods() {
     return this.prediction.keySet();
   }
 

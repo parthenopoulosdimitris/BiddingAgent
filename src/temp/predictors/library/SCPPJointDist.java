@@ -3,7 +3,6 @@ package temp.predictors.library;
 import java.util.Map;
 import java.util.Set;
 
-import brown.value.valuation.library.BundleValuation;
 import temp.maximizers.IMaxDist;
 import temp.predictions.IDistributionPrediction;
 import temp.predictions.library.SimpleJointPrediction;
@@ -22,6 +21,7 @@ public class SCPPJointDist implements IDistributionPredictor {
   private Integer numGames; 
   private Integer numIterations; 
   private Double pdThresh; 
+  // this doesn't exist anymore.
   private BundleValuation distInfo; 
   private Integer SIMPLAYERS = 10; 
   

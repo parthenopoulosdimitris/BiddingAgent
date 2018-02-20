@@ -10,9 +10,9 @@ import brown.setup.ISetup;
  * @author andrew
  *
  */
-public abstract class PredStratAgent extends AbsAgent {
+public abstract class PredictionStrategyAgent extends AbsAgent {
 
-  public PredStratAgent(String host, int port, ISetup gameSetup)
+  public PredictionStrategyAgent(String host, int port, ISetup gameSetup)
       throws AgentCreationException {
     super(host, port, gameSetup);
     // TODO Auto-generated constructor stub

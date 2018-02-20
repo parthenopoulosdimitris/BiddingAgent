@@ -3,14 +3,13 @@ package temp.bidstrategies;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.library.Tradeable;
-import brown.value.valuable.library.Value;
+import brown.tradeable.ITradeable;
 import temp.predictions.IPricePrediction;
 //TODO: a bid strategy is a maximizer.
 
 public interface IBidStrategy {
   
-  public Map<Tradeable, Value> getBids(Map<Tradeable, Double> values, IPricePrediction prediction);
+  public Map<ITradeable, Double> getBids(Map<ITradeable, Double> values, IPricePrediction prediction);
   
-  public Map<Tradeable, Double> getBidsBundle(Map<Set<Tradeable>, Double> values, IPricePrediction prediction);
+  public Map<ITradeable, Double> getBidsBundle(Map<Set<ITradeable>, Double> values, IPricePrediction prediction);
 }

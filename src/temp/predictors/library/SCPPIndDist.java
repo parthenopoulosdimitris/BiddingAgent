@@ -4,8 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.library.Tradeable;
-import brown.value.valuable.library.Value;
+import brown.tradeable.ITradeable;
+import brown.value.distribution.library.AdditiveValuationDistribution;
+import brown.value.valuation.IValuation;
 import brown.value.valuation.library.AdditiveValuation;
 import temp.histograms.IndependentHistogram;
 import temp.maximizers.IMaxDist;
@@ -21,7 +22,7 @@ public class SCPPIndDist implements IDistributionPredictor {
   private Integer numGames; 
   private Integer numIterations; 
   private Double pdThresh; 
-  private AdditiveValuation distInfo; 
+  private AdditiveValuationDistribution samplingDist; 
   private Integer SIMPLAYERS = 10; 
   
   private Double MIN = 0.0;
@@ -29,26 +30,34 @@ public class SCPPIndDist implements IDistributionPredictor {
   private Integer BINS = 100; 
   
   public SCPPIndDist(IMaxDist strat, SimpleIndPrediction initial,
-      Integer numGames, Integer numIterations, Double pdThresh, AdditiveValuation distInfo) {
+      Integer numGames, Integer numIterations, Double pdThresh, AdditiveValuationDistribution sampling) {
     this.strat = strat; 
     this.initial = initial;
     this.numGames = numGames; 
     this.numIterations = numIterations; 
     this.pdThresh = pdThresh; 
-    this.distInfo = distInfo; 
+    this.samplingDist = sampling; 
+  }
+  
+  public void addPrediction(SimpleIndPrediction init) {
+    this.initial = init; 
+  }
+  
+  public void addDistribution(AdditiveValuationDistribution dist) {
+    this.samplingDist = dist; 
   }
   
   public SimpleIndPrediction getPrediction() {
     SimpleIndPrediction returnPrediction = initial;
-    Set<Tradeable> initGoods = returnPrediction.getGoods();
-    Map<Tradeable, IndDist> returnVector = returnPrediction.getPrediction(initGoods).rep;
+    Set<ITradeable> initGoods = returnPrediction.getGoods();
+    Map<ITradeable, IndDist> returnVector = returnPrediction.getPrediction(initGoods).rep;
     Boolean withinThreshold = true; 
     int iterCount = 0; 
     for(int i = 0; i < numIterations; i++) {
       SimpleIndPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
-      Map<Tradeable, IndDist> guessMap = aGuess.getPrediction(initGoods).rep;
-      Map<Tradeable, IndDist> initMap = returnPrediction.getPrediction(initGoods).rep;
-      for(Tradeable t : guessMap.keySet()) {
+      Map<ITradeable, IndDist> guessMap = aGuess.getPrediction(initGoods).rep;
+      Map<ITradeable, IndDist> initMap = returnPrediction.getPrediction(initGoods).rep;
+      for(ITradeable t : guessMap.keySet()) {
         Map<Integer, Integer> first = guessMap.get(t).rep.getHistogram();
         Map<Integer, Integer> second = initMap.get(t).rep.getHistogram();
         if (first.size() != second.size()) {
@@ -68,7 +77,7 @@ public class SCPPIndDist implements IDistributionPredictor {
       if (withinThreshold)
         return aGuess;
       Double decay = (((double) numIterations) - iterCount + 1.0) / ((double) numIterations);
-      for(Tradeable t : guessMap.keySet()) {
+      for(ITradeable t : guessMap.keySet()) {
         IndependentHistogram init = initMap.get(t).rep;
         IndependentHistogram guess = guessMap.get(t).rep;
         IndependentHistogram returnHist = new IndependentHistogram(
@@ -88,11 +97,11 @@ public class SCPPIndDist implements IDistributionPredictor {
   private SimpleIndPrediction playSelf (Integer numPlayers,
       SimpleIndPrediction aPrediction) {
     //add datatypes
-    Map<Tradeable, Double> currentHighest = new HashMap<Tradeable, Double>();
-    Map<Tradeable, IndDist> guess = new HashMap<Tradeable, IndDist>(); 
+    Map<ITradeable, Double> currentHighest = new HashMap<ITradeable, Double>();
+    Map<ITradeable, IndDist> guess = new HashMap<ITradeable, IndDist>(); 
     //populate guess
-    Map<Tradeable, IndDist> goods = aPrediction.getPrediction(aPrediction.getGoods()).rep;
-    for(Tradeable t : goods.keySet()) {
+    Map<ITradeable, IndDist> goods = aPrediction.getPrediction(aPrediction.getGoods()).rep;
+    for(ITradeable t : goods.keySet()) {
       IndependentHistogram possiblePrices = 
           new IndependentHistogram(MIN, MAX, BINS);
       guess.put(t, new IndDist(possiblePrices));
@@ -101,16 +110,22 @@ public class SCPPIndDist implements IDistributionPredictor {
     //play self.
     for(int i = 0; i < numGames; i++) {
       for(int j = 0; j < numPlayers; j++) {
-        Map<Tradeable, Value> aVal = this.distInfo.getValuation(goods.keySet()).vals;
-        //this is localbid?
-        Map<Tradeable, Double> aBid = strat.getBids(aVal, aPrediction);
-        for(Tradeable t : aBid.keySet()) {
+        // sample the distribution. 
+        IValuation aVal = this.samplingDist.sample();
+        // get the values of each tradeable.
+        Map<ITradeable, Double> vals = new HashMap<ITradeable, Double>(); 
+        for (ITradeable t : this.initial.getGoods()) {
+          vals.put(t, aVal.getValuation(t)); 
+        }
+        // use the bidding strategy.
+        Map<ITradeable, Double> aBid = strat.getBids(vals, aPrediction);
+        for(ITradeable t : aBid.keySet()) {
           if (currentHighest.get(t) < aBid.get(t));
             currentHighest.put(t, aBid.get(t));
         }
       }
      //update
-      for(Tradeable t : currentHighest.keySet()) {
+      for(ITradeable t : currentHighest.keySet()) {
         IndependentHistogram corresponding = guess.get(t).rep;
         corresponding.increment(currentHighest.get(t));
         guess.put(t, new IndDist(corresponding));
