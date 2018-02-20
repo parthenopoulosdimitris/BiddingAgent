@@ -21,7 +21,7 @@ public class SCPPJointDist implements IDistributionPredictor {
   private Integer numGames; 
   private Integer numIterations; 
   private Double pdThresh; 
-  // this doesn't exist anymore.
+  // TODO: new bundle valuation
   private BundleValuation distInfo; 
   private Integer SIMPLAYERS = 10; 
   

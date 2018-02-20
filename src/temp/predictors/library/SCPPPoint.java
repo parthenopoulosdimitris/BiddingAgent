@@ -51,13 +51,6 @@ public class SCPPPoint implements IPointPredictor {
     this.initial = new SimplePointPrediction(initPrediction); 
   }
   
-  public void addPrediction(SimplePointPrediction init) {
-    this.initial = init; 
-  }
-  
-  public void addDistribution(AdditiveValuationDistribution dist) {
-    this.samplingDist = dist; 
-  }
   
   public SimplePointPrediction getPrediction() {
     SimplePointPrediction returnPrediction = initial; 

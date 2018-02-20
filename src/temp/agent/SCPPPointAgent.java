@@ -1,6 +1,15 @@
 package temp.agent; 
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import temp.maximizers.IMaxPoint;
+import temp.maximizers.library.TargetPrice;
+import temp.predictions.IPointPrediction;
 import temp.predictors.library.SCPPPoint;
+import brown.bid.interim.BidType;
+import brown.bidbundle.library.AuctionBidBundle;
 import brown.channels.library.AuctionChannel;
 import brown.exceptions.AgentCreationException;
 import brown.logging.Logging;
@@ -19,9 +28,24 @@ public class SCPPPointAgent extends MaxPredictAgent {
 
   @Override
   public void onSimpleSealed(AuctionChannel channel) {
-  // TODO: decide how to bid.
-  
-    
+  // 1. generate good price predictions
+  // 2. bid accordingly
+  // 1. 
+  IPointPrediction simplePoint = ((SCPPPoint) this.predictor).getPrediction(); 
+  // annoying conversion, pt. 1
+  Map<ITradeable, Double> valuations = new HashMap<ITradeable, Double>(); 
+  for (ITradeable t : this.tradeables) {
+    valuations.put(t, this.valuation.getValuation(t)); 
+  }
+  // 2. 
+  Map<ITradeable, Double> bid = ((IMaxPoint) this.maximizer).getBids(valuations, simplePoint);
+  // more annoying conversion
+  Map<ITradeable, BidType> bType = new HashMap<ITradeable, BidType>();
+  for (Entry<ITradeable, Double> e : bid.entrySet()) {
+    bType.put(e.getKey(), new BidType(e.getValue(), 1)); 
+  }
+  // now time to write an auction that handles this!
+  channel.bid(this, new AuctionBidBundle(bType)); 
   }
   
   @Override
@@ -31,8 +55,8 @@ public class SCPPPointAgent extends MaxPredictAgent {
       this.tradeables = ((ValuationInformationMessage) privateInfo).getTradeables();
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
-      this.maximizer = null; 
-      this.predictor = new SCPPPoint(null, this.tradeables.size(), 100, 100, 0.1, 
+      this.maximizer = new TargetPrice(); 
+      this.predictor = new SCPPPoint((IMaxPoint) this.maximizer, this.tradeables.size(), 100, 100, 0.1, 
           (AdditiveValuationDistribution) this.vDistribution); 
       for (ITradeable t: this.tradeables){
         Logging.log("Agent " + this.ID + ", Good: " + t.toString() + ", Value: " +this.valuation.getValuation(t));

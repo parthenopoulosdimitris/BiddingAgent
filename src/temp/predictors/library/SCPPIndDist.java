@@ -38,15 +38,7 @@ public class SCPPIndDist implements IDistributionPredictor {
     this.pdThresh = pdThresh; 
     this.samplingDist = sampling; 
   }
-  
-  public void addPrediction(SimpleIndPrediction init) {
-    this.initial = init; 
-  }
-  
-  public void addDistribution(AdditiveValuationDistribution dist) {
-    this.samplingDist = dist; 
-  }
-  
+
   public SimpleIndPrediction getPrediction() {
     SimpleIndPrediction returnPrediction = initial;
     Set<ITradeable> initGoods = returnPrediction.getGoods();
