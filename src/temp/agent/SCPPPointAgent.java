@@ -1,6 +1,7 @@
 package temp.agent; 
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
@@ -8,6 +9,7 @@ import temp.maximizers.IMaxPoint;
 import temp.maximizers.library.TargetPrice;
 import temp.predictions.IPointPrediction;
 import temp.predictors.library.SCPPPoint;
+import temp.representation.PointRep;
 import brown.bid.interim.BidType;
 import brown.bidbundle.library.AuctionBidBundle;
 import brown.channels.library.AuctionChannel;
@@ -31,8 +33,9 @@ public class SCPPPointAgent extends MaxPredictAgent {
   // 1. generate good price predictions
   // 2. bid accordingly
   // 1. 
-  System.out.println("AAAA"); 
+  System.out.println("Beginning of SCPP"); 
   IPointPrediction simplePoint = ((SCPPPoint) this.predictor).getPrediction(); 
+  System.out.println("End of SCPP"); 
   // annoying conversion, pt. 1
   Map<ITradeable, Double> valuations = new HashMap<ITradeable, Double>(); 
   for (ITradeable t : this.tradeables) {
@@ -45,7 +48,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
   for (Entry<ITradeable, Double> e : bid.entrySet()) {
     bType.put(e.getKey(), new BidType(e.getValue(), 1)); 
   }
-  // now time to write an auction that handles this!
+  System.out.println(bid); 
   channel.bid(this, new AuctionBidBundle(bType)); 
   }
   

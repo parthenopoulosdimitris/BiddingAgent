@@ -9,12 +9,11 @@ import brown.tradeable.ITradeable;
 import brown.tradeable.library.SimpleTradeable;
 import brown.value.distribution.library.AdditiveValuationDistribution;
 import brown.value.valuation.IValuation;
-import brown.value.valuation.library.AdditiveValuation;
 import temp.maximizers.IMaxPoint;
-import temp.predictions.library.SimpleIndPrediction;
 import temp.predictions.library.SimplePointPrediction;
 import temp.predictors.IPointPredictor;
 import temp.price.Price;
+import temp.representation.PointRep;
 
 /*
  * implements self-confirming price predictions for point predictions. 
@@ -46,8 +45,10 @@ public class SCPPPoint implements IPointPredictor {
     this.pdThresh = pdThresh; 
     this.samplingDist = sampling;
     Map<ITradeable, Price> initPrediction =  new HashMap<ITradeable, Price>();
-    for(int i = 0; i < numGoods; i++)
-      initPrediction.put(new SimpleTradeable(i), new Price(0.0));
+    // add to the initial vector.
+    for(int i = 0; i < numGoods; i++) {
+      initPrediction.put(new SimpleTradeable(i), new Price(0.0));      
+    }
     this.initial = new SimplePointPrediction(initPrediction); 
   }
   
@@ -61,14 +62,19 @@ public class SCPPPoint implements IPointPredictor {
     for(int i = 0; i < numIterations; i++) {
       SimplePointPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
       Map<ITradeable, Price> guessVector = aGuess.getPrediction(initGoods).rep;
+      System.out.println("guess: " + guessVector);
+      System.out.println("return " + returnVector);
       for(ITradeable t : guessVector.keySet()) {
         if((guessVector.get(t).rep - returnVector.get(t).rep) > pdThresh) {
           withinThreshold = false; 
           break;
         }
       }
-      if(withinThreshold)
-        return new SimplePointPrediction(guessVector);
+      if(withinThreshold) {
+        System.out.println("exit");
+        return new SimplePointPrediction(guessVector);      
+      }
+      System.out.println("continue");
       withinThreshold = true;
       Double decay = (double) (numIterations - i + 1) / (double) numIterations;
       for(ITradeable t : returnVector.keySet()) {
@@ -84,28 +90,41 @@ public class SCPPPoint implements IPointPredictor {
       SimplePointPrediction aPrediction) {
     Map<ITradeable, Price> guess = new HashMap<ITradeable, Price>();
     Map<ITradeable, Double> currentHighest = new HashMap<ITradeable, Double>();
+    // play a number of games against self.
     for(int i = 0; i < numGames; i++) {
+      // populate the guess with low bids
       for(ITradeable t : aPrediction.getPrediction(aPrediction.getGoods()).rep.keySet()) {
         guess.put(t, new Price(0.0));
         currentHighest.put(t, 0.0);
       }
+      // submit bids for simulated players
       for(int j = 0; j < simPlayers; j++) {
-        Set<ITradeable> b = this.initial.getPrediction(aPrediction.getGoods()).rep.keySet();
+        // get a valuation
         IValuation val = this.samplingDist.sample(); 
         Map<ITradeable, Double> valuation = new HashMap<ITradeable, Double>();
         for (ITradeable t : this.initial.getGoods()) {
           valuation.put(t, val.getValuation(t)); 
         }
+        // bid according to valuation and strategy
         Map<ITradeable, Double> aBid = strat.getBids(valuation, aPrediction);
+      // record highest bid.
       for(ITradeable t : aBid.keySet()) {
         if (currentHighest.get(t) < aBid.get(t))
           currentHighest.put(t, aBid.get(t));
       }
       }
+      System.out.println("HIGHEST" + currentHighest);
+      // hmm... average over the number of games. 
+      // so that'd be the average over all runs at a current moment. 
+      // so you'd like to add a number to an existing avg... 
+      // 
       for(ITradeable t : currentHighest.keySet()) {
-        Double other = guess.get(t).rep;
-        Double newPrice = (currentHighest.get(t) / numGames)
-            + other;
+        Double existing = guess.get(t).rep;
+        Double newPrice = (((existing * (double) i) + currentHighest.get(t)) / ((double) (i + 1))); 
+        if (i == 0) {
+          System.out.println("NEW PRICE" + newPrice);
+          System.out.println(i);          
+        }
         guess.put(t, new Price(newPrice));
       }
       currentHighest.clear();

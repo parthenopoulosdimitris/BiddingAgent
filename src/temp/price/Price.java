@@ -7,4 +7,10 @@ public class Price {
   public Price(Double value) {
     this.rep = value; 
   }
+
+  @Override
+  public String toString() {
+    return "" + rep;
+  }
+  
 }

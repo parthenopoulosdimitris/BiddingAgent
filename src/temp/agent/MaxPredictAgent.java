@@ -4,7 +4,7 @@ package temp.agent;
 
 import java.util.List;
 
-import brown.agent.AbsAgent;
+import brown.agent.AbsSimpleSealedAgent;
 import brown.channels.library.AuctionChannel;
 import brown.exceptions.AgentCreationException;
 import brown.logging.Logging;
@@ -27,7 +27,7 @@ import temp.predictors.IPredictor;
  * @author andrew
  *
  */
-public abstract class MaxPredictAgent extends AbsAgent {
+public abstract class MaxPredictAgent extends AbsSimpleSealedAgent {
 
   protected List<ITradeable> tradeables; 
   protected IValuation valuation;

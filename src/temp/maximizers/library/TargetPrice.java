@@ -2,7 +2,6 @@ package temp.maximizers.library;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import brown.tradeable.ITradeable;
 import temp.maximizers.IMaxPoint;
@@ -23,9 +22,10 @@ public class TargetPrice implements IMaxPoint {
     // some annoying conversions.
     Map<ITradeable, Price> pred = ((PointRep) aPrediction.getPrediction(valuations.keySet())).rep; 
     Map<ITradeable, Double> predTwo = new HashMap<ITradeable, Double>(); 
-    for (Entry<ITradeable, Price> e : pred.entrySet()) {
-      if (e.getValue().rep > 0)
-        predTwo.put(e.getKey(), e.getValue().rep); 
+    // check that the valuation is higher than the prediction and bid if it is.
+    for (ITradeable t : pred.keySet()) {
+      if ((valuations.get(t) - pred.get(t).rep) > 0)
+        predTwo.put(t, valuations.get(t)); 
     }
     return predTwo;
   }
