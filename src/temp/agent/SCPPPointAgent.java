@@ -31,6 +31,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
   // 1. generate good price predictions
   // 2. bid accordingly
   // 1. 
+  System.out.println("AAAA"); 
   IPointPrediction simplePoint = ((SCPPPoint) this.predictor).getPrediction(); 
   // annoying conversion, pt. 1
   Map<ITradeable, Double> valuations = new HashMap<ITradeable, Double>(); 
@@ -69,6 +70,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
   public static void main(String[] args) throws AgentCreationException {
       // predictor and maximizer rely on private information.
       new SCPPPointAgent("localhost", 2121, new SSSPSetup()); 
+      while(true){}
   }
   
   
