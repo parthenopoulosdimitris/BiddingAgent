@@ -5,16 +5,16 @@ import java.util.Map;
 import java.util.Set;
 
 import brown.tradeable.ITradeable;
+import brown.tradeable.library.SimpleTradeable;
 import brown.value.distribution.library.AdditiveValuationDistribution;
 import brown.value.valuation.IValuation;
-import brown.value.valuation.library.AdditiveValuation;
 import temp.histograms.IndependentHistogram;
 import temp.maximizers.IMaxDist;
 import temp.predictions.library.SimpleIndPrediction;
 import temp.predictors.IDistributionPredictor;
 import temp.price.IndDist;
 
-//TODO: normalize, smooth? put the generator in the metaval, change the MAX thing? (slash scale?)
+//TODO: normalize, smooth? maybe? 
 public class SCPPIndDist implements IDistributionPredictor {
   
   private SimpleIndPrediction initial; 
@@ -26,17 +26,21 @@ public class SCPPIndDist implements IDistributionPredictor {
   private Integer SIMPLAYERS = 10; 
   
   private Double MIN = 0.0;
-  private Double MAX = 5.0;
+  private Double MAX = 1.0;
   private Integer BINS = 100; 
   
-  public SCPPIndDist(IMaxDist strat, SimpleIndPrediction initial,
+  public SCPPIndDist(IMaxDist strat, Integer numGoods, 
       Integer numGames, Integer numIterations, Double pdThresh, AdditiveValuationDistribution sampling) {
     this.strat = strat; 
-    this.initial = initial;
     this.numGames = numGames; 
     this.numIterations = numIterations; 
     this.pdThresh = pdThresh; 
     this.samplingDist = sampling; 
+    Map<ITradeable, IndDist> initPred = new HashMap<ITradeable, IndDist>();
+    for (int i = 0; i < numGoods; i++) {
+      initPred.put(new SimpleTradeable(i), new IndDist(new IndependentHistogram(MIN, MAX, BINS)));
+    }
+    this.initial = new SimpleIndPrediction(initPred);
   }
 
   public SimpleIndPrediction getPrediction() {
