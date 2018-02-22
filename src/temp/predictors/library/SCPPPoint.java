@@ -54,6 +54,7 @@ public class SCPPPoint implements IPointPredictor {
   
   
   public SimplePointPrediction getPrediction() {
+    int index = 0; 
     SimplePointPrediction returnPrediction = initial; 
     //this can be the initial. 
     Set<ITradeable> initGoods = returnPrediction.getGoods(); 
@@ -62,19 +63,20 @@ public class SCPPPoint implements IPointPredictor {
     for(int i = 0; i < numIterations; i++) {
       SimplePointPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
       Map<ITradeable, Price> guessVector = aGuess.getPrediction(initGoods).rep;
-      System.out.println("guess: " + guessVector);
-      System.out.println("return " + returnVector);
       for(ITradeable t : guessVector.keySet()) {
-        if((guessVector.get(t).rep - returnVector.get(t).rep) > pdThresh) {
+        if((Math.abs(guessVector.get(t).rep - returnVector.get(t).rep)) > pdThresh) {
           withinThreshold = false; 
           break;
         }
       }
       if(withinThreshold) {
+        System.out.println("guess: " + guessVector);
+        System.out.println("return " + returnVector);
         System.out.println("exit");
+        System.out.println(i);
         return new SimplePointPrediction(guessVector);      
       }
-      System.out.println("continue");
+      index++;
       withinThreshold = true;
       Double decay = (double) (numIterations - i + 1) / (double) numIterations;
       for(ITradeable t : returnVector.keySet()) {
@@ -83,6 +85,9 @@ public class SCPPPoint implements IPointPredictor {
         returnVector.put(t, new Price(newPrice));
       }
     }
+    //System.out.println("guess: " + guessVector);
+    System.out.println("return " + returnVector);
+    System.out.println("timeout");
     return new SimplePointPrediction(returnVector);
   }
   
@@ -90,11 +95,14 @@ public class SCPPPoint implements IPointPredictor {
       SimplePointPrediction aPrediction) {
     Map<ITradeable, Price> guess = new HashMap<ITradeable, Price>();
     Map<ITradeable, Double> currentHighest = new HashMap<ITradeable, Double>();
+    // populate the guess with low bids
+    for(ITradeable t : aPrediction.getPrediction(aPrediction.getGoods()).rep.keySet()) {
+      guess.put(t, new Price(0.0));
+    }
     // play a number of games against self.
     for(int i = 0; i < numGames; i++) {
-      // populate the guess with low bids
+      // populate the currentHighest with low bids
       for(ITradeable t : aPrediction.getPrediction(aPrediction.getGoods()).rep.keySet()) {
-        guess.put(t, new Price(0.0));
         currentHighest.put(t, 0.0);
       }
       // submit bids for simulated players
@@ -110,22 +118,17 @@ public class SCPPPoint implements IPointPredictor {
       // record highest bid.
       for(ITradeable t : aBid.keySet()) {
         if (currentHighest.get(t) < aBid.get(t))
-          currentHighest.put(t, aBid.get(t));
+          currentHighest.put(t, aBid.get(t));     
+        }
       }
-      }
-      System.out.println("HIGHEST" + currentHighest);
       // hmm... average over the number of games. 
       // so that'd be the average over all runs at a current moment. 
       // so you'd like to add a number to an existing avg... 
       // 
       for(ITradeable t : currentHighest.keySet()) {
         Double existing = guess.get(t).rep;
-        Double newPrice = (((existing * (double) i) + currentHighest.get(t)) / ((double) (i + 1))); 
-        if (i == 0) {
-          System.out.println("NEW PRICE" + newPrice);
-          System.out.println(i);          
-        }
-        guess.put(t, new Price(newPrice));
+        Double newPrice = (((existing * (double) i) + currentHighest.get(t)) / ((double) (i + 1)));       
+        guess.put(t, new Price(newPrice));            
       }
       currentHighest.clear();
     }

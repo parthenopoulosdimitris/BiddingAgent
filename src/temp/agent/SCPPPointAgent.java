@@ -41,6 +41,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
   for (ITradeable t : this.tradeables) {
     valuations.put(t, this.valuation.getValuation(t)); 
   }
+  System.out.println("VALUATIONS: " + valuations);
   // 2. 
   Map<ITradeable, Double> bid = ((IMaxPoint) this.maximizer).getBids(valuations, simplePoint);
   // more annoying conversion
@@ -60,7 +61,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
       this.maximizer = new TargetPrice(); 
-      this.predictor = new SCPPPoint((IMaxPoint) this.maximizer, this.tradeables.size(), 100, 100, 0.1, 
+      this.predictor = new SCPPPoint((IMaxPoint) this.maximizer, this.tradeables.size(), 100, 100, 0.05, 
           (AdditiveValuationDistribution) this.vDistribution); 
       for (ITradeable t: this.tradeables){
         Logging.log("Agent " + this.ID + ", Good: " + t.toString() + ", Value: " +this.valuation.getValuation(t));
