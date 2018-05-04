@@ -39,7 +39,6 @@ public class SCPPJointDist implements IDistributionPredictor {
   }
   
   /**
-   * this is where I need to get creative.
    */
   public SimpleJointPrediction getPrediction() {
      SimpleJointPrediction returnPrediction = initial; 

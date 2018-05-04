@@ -13,6 +13,7 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/jars/TradingPlatform.jar"/>
+	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/jars/sats-0.6.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="/gpfs/main/home/acoggins/workspace/TP5_4jar.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
