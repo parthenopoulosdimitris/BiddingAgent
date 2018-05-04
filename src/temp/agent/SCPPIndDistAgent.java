@@ -8,9 +8,11 @@ import java.util.Map.Entry;
 import temp.maximizers.IMaxDist;
 import temp.maximizers.IMaxPoint;
 import temp.maximizers.library.TargetPrice;
+import temp.maximizers.library.TargetPriceDist;
 import temp.predictions.IDistributionPrediction;
 import temp.predictors.library.SCPPIndDist;
 import temp.price.Price;
+import temp.representation.IndRep;
 import temp.representation.PointRep;
 import brown.bid.interim.BidType;
 import brown.bidbundle.library.AuctionBidBundle;
@@ -24,6 +26,12 @@ import brown.setup.library.SSSPSetup;
 import brown.tradeable.ITradeable;
 import brown.value.distribution.library.AdditiveValuationDistribution;
 
+/**
+ * SCPP ind dist agent produces self-confirming price predictions stored as 
+ * independent histograms over possible prices of goods.
+ * @author andrew
+ *
+ */
 public class SCPPIndDistAgent extends MaxPredictAgent {
 
   public SCPPIndDistAgent(String host, int port, ISetup gameSetup)
@@ -33,12 +41,12 @@ public class SCPPIndDistAgent extends MaxPredictAgent {
 
   @Override
   public void onSimpleSealed(AuctionChannel channel) {
-    System.out.println("Beginning of SCPP"); 
     IDistributionPrediction indDistPrediction = ((SCPPIndDist) this.predictor).getPrediction(); 
-    // we're gonna want to capture the mean prediction
-    System.out.println("End of SCPP"); 
+    // we're gonna want to capture the mean prediction 
+    PointRep rep =  (PointRep) indDistPrediction.getMeanPrediction(new HashSet<ITradeable>(this.tradeables)); 
+    System.out.println("SCPP Prediction: " + rep.rep);
     Map<ITradeable, Double> valuations  = new HashMap<ITradeable, Double>();
-    for (ITradeable t : this.goods) {
+    for (ITradeable t : this.tradeables) {
       valuations.put(t, this.valuation.getValuation(t));
     }
     Map<ITradeable, Double> bid = ((IMaxDist) this.maximizer).getBids(valuations, indDistPrediction);
@@ -47,6 +55,7 @@ public class SCPPIndDistAgent extends MaxPredictAgent {
     for (Entry<ITradeable, Double> e : bid.entrySet()) {
       returnMap.put(e.getKey(), new BidType(e.getValue(), 1)); 
     }
+    System.out.println("BIDS: " + returnMap);
     channel.bid(this, new AuctionBidBundle(returnMap));
   }
   
@@ -57,8 +66,7 @@ public class SCPPIndDistAgent extends MaxPredictAgent {
       this.tradeables = ((ValuationInformationMessage) privateInfo).getTradeables();
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
-      this.maximizer = new TargetPrice(); 
-      // TODO: valuation over complex tradeables.
+      this.maximizer = new TargetPriceDist(); 
       this.predictor = new SCPPIndDist((IMaxDist) this.maximizer, this.tradeables.size(), 100, 100, 0.05, 
           (AdditiveValuationDistribution) this.vDistribution); 
       for (ITradeable t: this.tradeables) {
@@ -74,5 +82,5 @@ public class SCPPIndDistAgent extends MaxPredictAgent {
     new SCPPIndDistAgent("localhost", 2121, new SSSPSetup()); 
     while(true){}
 }
-  
+
 }

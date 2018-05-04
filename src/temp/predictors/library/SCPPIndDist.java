@@ -15,6 +15,12 @@ import temp.predictors.IDistributionPredictor;
 import temp.price.IndDist;
 
 //TODO: normalize, smooth? maybe? 
+/**
+ * produces self-confirming price predictions as 
+ * histograms over prices.
+ * @author andrew
+ *
+ */
 public class SCPPIndDist implements IDistributionPredictor {
   
   private SimpleIndPrediction initial; 
@@ -70,8 +76,10 @@ public class SCPPIndDist implements IDistributionPredictor {
           }
         }
       }
-      if (withinThreshold)
+      if (withinThreshold) {
+        System.out.println("GUESS: " + aGuess.getPrediction(initGoods).rep);
         return aGuess;
+      }
       Double decay = (((double) numIterations) - iterCount + 1.0) / ((double) numIterations);
       for(ITradeable t : guessMap.keySet()) {
         IndependentHistogram init = initMap.get(t).rep;
@@ -86,7 +94,7 @@ public class SCPPIndDist implements IDistributionPredictor {
         returnVector.put(t, new IndDist(returnHist));
       }
       iterCount++;
-    }
+    } 
     return new SimpleIndPrediction(returnVector);
   }
 
@@ -128,6 +136,7 @@ public class SCPPIndDist implements IDistributionPredictor {
       } 
       currentHighest.clear();
     }
+    System.out.println("PLAYING SELF: " + guess);
     return new SimpleIndPrediction(guess);
   } 
 }

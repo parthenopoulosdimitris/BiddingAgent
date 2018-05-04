@@ -11,6 +11,7 @@ import temp.representation.PointRep;
 
 /**
  * only bid if it will contribute to the bottom line.
+ * bids at the predicted price. 
  * @author acoggins
  *
  */
@@ -25,7 +26,7 @@ public class TargetPrice implements IMaxPoint {
     // check that the valuation is higher than the prediction and bid if it is.
     for (ITradeable t : pred.keySet()) {
       if ((valuations.get(t) - pred.get(t).rep) > 0)
-        predTwo.put(t, valuations.get(t)); 
+        predTwo.put(t, pred.get(t).rep); 
     }
     return predTwo;
   }

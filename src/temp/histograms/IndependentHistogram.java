@@ -2,6 +2,7 @@ package temp.histograms;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ThreadLocalRandom;
 
 /*
  * the bins implementation may cause errors.
@@ -29,10 +30,13 @@ public class IndependentHistogram implements IHistogram {
   
   public void increment(Double value) {
     Integer binLocation;
+    //TODO: need to normalize. 
+    System.out.println("INCREMENT TRYING TO OCCUR");
       if(value > minimumValue && value < maximumValue) {
         binLocation = (int) (value / this.binSize);
         Integer val = bins.get(binLocation);
         bins.put(binLocation, val + 1);
+        System.out.println("INCREMENT OCCURING");
       }
     }
   
@@ -57,4 +61,42 @@ public class IndependentHistogram implements IHistogram {
     return this.bins;
   }
   
+  /**
+   * gets the mean of the histogram.
+   * @return
+   */
+  public double getMean() {
+    double runningBinAmt = this.getMin(); 
+    double midBin = this.binSize / 2.0; 
+    double totalCount = 0.0; 
+    int totalBins = 0; 
+    for (int i = 0; i < this.bins.size(); i++) { 
+      totalBins += this.bins.get(i);
+      totalCount += ((double) this.bins.get(i)) * runningBinAmt + midBin; 
+      runningBinAmt += this.binSize;
+    }
+    return totalCount / ((double) totalBins); 
+  }
+  
+  /**
+   * samples randomly from the histogram.
+   * @return
+   */
+  public double sample() {
+    int totalBins = 0; 
+    for(int i = 0; i  < this.bins.size(); i++) {
+      totalBins += this.bins.get(i); 
+    }
+    int randomNum = ThreadLocalRandom.current().nextInt(0, totalBins);
+    for(int i = 0; i < this.bins.size(); i++) {
+      totalBins -= this.bins.get(i); 
+      randomNum -= this.bins.get(i); 
+      if (randomNum < 0) {
+        // return the value stored at the bin. 
+        return this.getMin() + ((double) i * (double) this.binSize) + (this.binSize / 2.0); 
+      }
+    }
+    // should never happen. 
+    return 0.0; 
+  }
 }

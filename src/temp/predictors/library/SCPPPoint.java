@@ -13,7 +13,6 @@ import temp.maximizers.IMaxPoint;
 import temp.predictions.library.SimplePointPrediction;
 import temp.predictors.IPointPredictor;
 import temp.price.Price;
-import temp.representation.PointRep;
 
 /*
  * implements self-confirming price predictions for point predictions. 
@@ -25,7 +24,7 @@ public class SCPPPoint implements IPointPredictor {
   private Integer numIterations; 
   private Double pdThresh; 
   private AdditiveValuationDistribution samplingDist;
-  private Integer SIMPLAYERS = 10;
+  private Integer SIMPLAYERS = 8;
   private IMaxPoint strat;
   
   /**

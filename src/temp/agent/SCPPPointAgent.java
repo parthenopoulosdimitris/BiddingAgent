@@ -22,6 +22,12 @@ import brown.setup.library.SSSPSetup;
 import brown.tradeable.ITradeable;
 import brown.value.distribution.library.AdditiveValuationDistribution;
 
+/**
+ * SCPP Point Agent uses SCPP to find point predicitons for 
+ * the prices of goods. 
+ * @author andrew
+ *
+ */
 public class SCPPPointAgent extends MaxPredictAgent {
 
   public SCPPPointAgent(String host, int port, ISetup gameSetup) throws AgentCreationException {
@@ -79,6 +85,7 @@ public class SCPPPointAgent extends MaxPredictAgent {
       new SCPPPointAgent("localhost", 2121, new SSSPSetup()); 
       while(true){}
   }
+
   
   
 }
