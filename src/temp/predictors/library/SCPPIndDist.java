@@ -124,7 +124,7 @@ public class SCPPIndDist implements IDistributionPredictor {
         // use the bidding strategy.
         Map<ITradeable, Double> aBid = strat.getBids(vals, aPrediction);
         for(ITradeable t : aBid.keySet()) {
-          if (currentHighest.get(t) < aBid.get(t));
+          if (currentHighest.get(t) < aBid.get(t))
             currentHighest.put(t, aBid.get(t));
         }
       }

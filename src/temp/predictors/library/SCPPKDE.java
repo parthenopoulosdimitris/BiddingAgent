@@ -26,6 +26,14 @@ public class SCPPKDE implements IDistributionPredictor {
   private Integer SIMPLAYERS = 10; 
   private Integer SIZE = 5; 
   
+  /**
+   * 
+   * @param strat the strategy that agents will be using to place bids.
+   * @param initial
+   * @param numGames
+   * @param numIterations
+   * @param agent
+   */
   public SCPPKDE(IMaxComplexDist strat, SimpleKDEPrediction initial, 
       Integer numGames, Integer numIterations, AbsCombinatorialProjectAgentV2 agent) {
     this.strat = strat; 
@@ -38,9 +46,7 @@ public class SCPPKDE implements IDistributionPredictor {
   @Override
   public IDistributionPrediction getPrediction() {
     SimpleKDEPrediction returnPrediction = initial; 
-    // TODO Auto-generated method stub
     Set<ITradeable> initGoods = returnPrediction.getGoods();
-    Boolean withinThreshold = true; 
     for (int i = 0; i < numIterations; i++) {
       SimpleKDEPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
       KDE aKDE = aGuess.getPrediction(initGoods).rep.rep;
