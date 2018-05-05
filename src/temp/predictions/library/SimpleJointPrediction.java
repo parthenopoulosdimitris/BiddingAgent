@@ -1,6 +1,5 @@
 package temp.predictions.library;
 
-import java.util.Map;
 import java.util.Set;
 
 import brown.tradeable.ITradeable;
@@ -11,16 +10,18 @@ import temp.representation.VecPointRep;
 
 public class SimpleJointPrediction implements IDistributionPrediction {
    
-  private Map<Set<ITradeable>, JointDist> prediction; 
+  private Set<ITradeable> tradeables; 
+  JointDist prediction; 
   
-  public SimpleJointPrediction(Map<Set<ITradeable>, JointDist> prediction) {
+  public SimpleJointPrediction(Set<ITradeable> tradeables, JointDist prediction) {
     this.prediction = prediction;
+    this.tradeables = tradeables; 
   }
 
   @Override
   public JointRep getPrediction(Set<ITradeable> goods) {
     // TODO Auto-generated method stub
-    return null;
+    return new JointRep(this.prediction);
   }
 
   @Override
@@ -34,4 +35,10 @@ public class SimpleJointPrediction implements IDistributionPrediction {
     // TODO Auto-generated method stub
     return null;
   }
+  
+  public Set<ITradeable> getGoods() {
+    return this.tradeables; 
+  }
+  
+  
 }

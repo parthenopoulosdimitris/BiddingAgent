@@ -14,7 +14,6 @@ public class JointHistogram implements IHistogram  {
   private Integer numGoods;
   private Double[] minimumValue; 
   private Double[] maximumValue; 
-  private Double[] binSize;
   private Integer[] numBins;
   private Map<Integer[], Integer> bins;
   
@@ -31,17 +30,15 @@ public class JointHistogram implements IHistogram  {
    * @param numBins
    * the number of bins along an axis. 
    */
-  public JointHistogram(Integer numGood, Double minVal, Double maxVal, Double binSize, 
+  public JointHistogram(Integer numGood, Double minVal, Double maxVal, 
       Integer numBins) {
     this.numGoods = numGood; 
     this.minimumValue = new Double[numGoods];
     this.maximumValue = new Double[numGoods];
-    this.binSize = new Double[numGoods];
     this.numBins = new Integer [numGoods];
     for(int i = 0; i < numGoods; i++) {
       this.minimumValue[i] = minVal;
       this.maximumValue[i] = maxVal;
-      this.binSize[i] = binSize; 
       this.numBins[i] = numBins;
     }
    this.bins = new HashMap<>();
@@ -62,12 +59,10 @@ public class JointHistogram implements IHistogram  {
      this.numGoods = numGood; 
      this.minimumValue = new Double[numGoods];
      this.maximumValue = new Double[numGoods];
-     this.binSize = new Double[numGoods];
      this.numBins = new Integer [numGoods];
      for(int i = 0; i < numGoods; i++) {
        this.minimumValue[i] = minVal[i];
        this.maximumValue[i] = maxVal[i];
-       this.binSize[i] = binSize[i]; 
        this.numBins[i] = numBins[i];
      }
      this.bins = new HashMap<>();
@@ -85,7 +80,7 @@ public class JointHistogram implements IHistogram  {
     Integer[] position = new Integer[this.numGoods];
     for(int i = 0; i < numGoods; i++) {
       Double dimValue = value[i];
-      Double size = binSize[i];
+      Double size = (maximumValue[i] - minimumValue[i]) / (double) numBins[i];
       if(dimValue > minimumValue[i] && dimValue < maximumValue[i]) {
         Integer binLocation = (int) (dimValue / size);
         position[i] = binLocation; 
