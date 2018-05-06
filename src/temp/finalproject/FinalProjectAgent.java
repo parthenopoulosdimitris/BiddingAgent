@@ -6,10 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Map.Entry;
 
 import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.agent.library.T1CombAgent;
 import brown.exceptions.AgentCreationException;
 import brown.tradeable.ITradeable;
 import brown.tradeable.library.SimpleTradeable;
@@ -22,6 +20,7 @@ import temp.predictors.library.SCPPKDE;
 public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
 
   private static long initialLag = 1000;
+  private int SIMGOODS = 2; 
   
   private Map<Integer, Double> bundle = new HashMap<Integer, Double>();
   private double bundleValue = 0;
@@ -54,28 +53,35 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
   @Override
   public void onAuctionStart() { 
     // the initial bundle of goods that we're testing on. will change later. 
-    Map<Set<Integer>, Double> testMap = this.queryXORs(1, 5, 0);
-    Set<ITradeable> testBundle = new HashSet<ITradeable>();
-    Set<Set<Integer>> testBundlePowerSet = new HashSet<Set<Integer>>();
-    for (Set<Integer> thing : testMap.keySet()) {
-      for (Integer i : thing) {
-        testBundle.add(new SimpleTradeable(i)); 
-      }
-      testBundlePowerSet = powerSet(thing);
-      break;
+    Set<Integer> testBundleInts = new HashSet<Integer>(); 
+    Set<ITradeable> testBundle = new HashSet<ITradeable>(); 
+    for (int i = 1; i <= this.SIMGOODS; i++) {
+      testBundleInts.add(i); 
+      testBundle.add(new SimpleTradeable(i)); 
     }
+//    double val = this.queryValue(testBundleInts);
+//    Map<Set<Integer>, Double> testMap = new HashMap<Set<Integer>, Double>(); 
+//    testMap.put(testBundle, val);
+    Set<Set<Integer>> testBundlePowerSet = powerSet(testBundleInts);
+    Set<Set<Integer>> toRemove = new HashSet<Set<Integer>>();
+    for(Set<Integer> aSet : testBundlePowerSet) {
+      if (aSet.size() <= this.SIMGOODS - 2) {
+        toRemove.add(aSet);
+      }
+    }
+    testBundlePowerSet.removeAll(toRemove);
     // initial KDE for SCPP
     KDE initialKernelDensity = new KDE(); 
-    initialKernelDensity.addObservation(new Double[5]);
+    initialKernelDensity.addObservation(new Double[this.SIMGOODS]);
     // need a helper method to get all subsets.
     SimpleKDEPrediction initialPrediction = new SimpleKDEPrediction(testBundle, initialKernelDensity);
     // strategy for SCPP playing self.
     FavoriteBundleBid dummyAgentStrategy = new FavoriteBundleBid(this, testBundlePowerSet); 
-    SCPPKDE predictionOptimizer = new SCPPKDE(dummyAgentStrategy, initialPrediction, 100, 100, this);
-    
+    SCPPKDE predictionOptimizer = new SCPPKDE(dummyAgentStrategy, initialPrediction, 6, 6, this, testBundlePowerSet, testBundle);
     SimpleKDEPrediction kdePred = (SimpleKDEPrediction) predictionOptimizer.getPrediction();
+    System.out.println(kdePred.getPrediction(testBundle).rep.rep.getObservations());
     //localbid.
-    LocalBidComplexKDE strategyOptimizer = new LocalBidComplexKDE(null, this);
+    LocalBidComplexKDE strategyOptimizer = new LocalBidComplexKDE(null, this, testBundlePowerSet);
     Map<ITradeable, Double> tradeableBundle = strategyOptimizer.getBids(null, kdePred);
     Map<Integer, Double> bundle = new HashMap<Integer, Double>(); 
     for (ITradeable t : tradeableBundle.keySet()) {
@@ -113,11 +119,11 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
 
   public static void main(String[] args) throws AgentCreationException {
     new FinalProjectAgent("localhost", 2121, "agent1");
-    new T1CombAgent("localhost", 2121, "agent2");
-    new T1CombAgent("localhost", 2121, "agent3");
-    new T1CombAgent("localhost", 2121, "agent4");
-    new T1CombAgent("localhost", 2121, "agent5");
-    new T1CombAgent("localhost", 2121, "agent6");
+//    new T1CombAgent("localhost", 2121, "agent2");
+//    new T1CombAgent("localhost", 2121, "agent3");
+//    new T1CombAgent("localhost", 2121, "agent4");
+//    new T1CombAgent("localhost", 2121, "agent5");
+//    new T1CombAgent("localhost", 2121, "agent6");
     while (true) {}
   }
   

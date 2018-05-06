@@ -4,7 +4,7 @@ import brown.server.library.CombAuctionServer;
 
 public class CombAuctionServerTemplate {
   private static int initDelay = 5;  // time to wait before beginning the simulation
-  private static int initLag = 1000;
+  private static int initLag = 5000;
   private static int lag = 100; // time between intervals in which bots can trade, should probably leave this high to be safe
   private static int nSims = 1;  // number of simulations
   private static double increment = 20.; // how much prices increment between rounds

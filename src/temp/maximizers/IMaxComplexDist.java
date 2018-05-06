@@ -8,6 +8,6 @@ import temp.predictions.IDistributionPrediction;
 
 public interface IMaxComplexDist extends IMaximizer {
   
-  public Map<ITradeable, Double> getBids(Map<Set<ITradeable>, Double> valuations,
+  public Map<ITradeable, Double> getBids(Map<ITradeable, Double> valuations,
       IDistributionPrediction prediction);
 }

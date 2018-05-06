@@ -24,7 +24,7 @@ public class KDE {
   }
   
   public List<Double[]> getObservations(){ 
-    return this.getObservations();
+    return this.observations;
   }
   
   //runs the observations in python and finds a kernel density estimate. 
