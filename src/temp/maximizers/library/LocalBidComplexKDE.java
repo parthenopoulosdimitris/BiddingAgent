@@ -29,7 +29,6 @@ public class LocalBidComplexKDE implements IMaxComplexDist {
   @Override
   public Map<ITradeable, Double> getBids(
       Map<ITradeable, Double> valuations, IDistributionPrediction prediction) {
-    // TODO Auto-generated method stub
     
     // from the prediction, get the "mean price" with KDE. 
     // then, bid by bid, improve. 

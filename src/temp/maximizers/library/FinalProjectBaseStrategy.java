@@ -31,8 +31,6 @@ public class FinalProjectBaseStrategy implements IMaxComplexDist {
       Set<ITradeable> tSet = new HashSet<ITradeable>(t.flatten()); 
       
     }
-    return points.rep; 
-    
     
     return null;
   }

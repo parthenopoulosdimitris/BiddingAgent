@@ -52,6 +52,8 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
   // Everything!
   @Override
   public void onAuctionStart() { 
+    
+    System.out.println(this.getFavoriteBundle()); 
     // the initial bundle of goods that we're testing on. will change later. 
     Set<Integer> testBundleInts = new HashSet<Integer>(); 
     Set<ITradeable> testBundle = new HashSet<ITradeable>(); 
