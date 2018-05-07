@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import org.spectrumauctions.sats.core.model.mrvm.MRVMGenericDefinition;
 import org.spectrumauctions.sats.core.model.mrvm.MRVMLicense;
@@ -18,7 +17,6 @@ import brown.exceptions.AgentCreationException;
 
 public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
   
-  private static long initialLag = 1000;
   
   private Set<Integer> bundle = new HashSet<Integer>();
   private double bundleValue;
@@ -28,13 +26,12 @@ public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
   }
 
   @Override
-  public Set<Integer> onBidRound() {
-    long initTime = System.currentTimeMillis();   
+  public Set<Integer> onBidRound() {  
     // bid for our bundle, if it's price isn't too high
     if (getBundlePrice(bundle) < bundleValue) {
       return bundle;
     } else {
-      return new HashSet<>();
+      return new HashSet<Integer>();
     }
   }
 
