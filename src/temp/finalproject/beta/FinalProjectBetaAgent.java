@@ -13,6 +13,7 @@ import org.spectrumauctions.sats.opt.model.mrvm.demandquery.MRVM_DemandQueryMIP;
 import java.util.Set;
 
 import brown.agent.AbsCombinatorialProjectAgentV2;
+import brown.agent.library.T1CombAgent;
 import brown.exceptions.AgentCreationException;
 
 public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
@@ -94,6 +95,12 @@ public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
   
   public static void main(String[] args) throws AgentCreationException {
     new FinalProjectBetaAgent("localhost", 2121, "agent1");
+    new T1CombAgent("localhost", 2121, "agent2"); 
+    new T1CombAgent("localhost", 2121, "agent3"); 
+    new T1CombAgent("localhost", 2121, "agent4"); 
+    new T1CombAgent("localhost", 2121, "agent5"); 
+    new T1CombAgent("localhost", 2121, "agent6"); 
+    new T1CombAgent("localhost", 2121, "agent7"); 
     while (true) {}
   }
 }
