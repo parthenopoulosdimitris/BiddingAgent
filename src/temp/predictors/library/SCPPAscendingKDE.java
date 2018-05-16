@@ -20,7 +20,7 @@ import temp.predictions.IDistributionPrediction;
 import temp.predictions.library.SimpleKDEPrediction;
 import temp.predictors.IDistributionPredictor;
 
-public class SCPPKDE implements IDistributionPredictor {
+public class SCPPAscendingKDE implements IDistributionPredictor {
 
   private SimpleKDEPrediction initial; 
   private IMaxComplexDist strat; 
@@ -41,7 +41,7 @@ public class SCPPKDE implements IDistributionPredictor {
    * @param numIterations
    * @param agent
    */
-  public SCPPKDE(IMaxComplexDist strat, SimpleKDEPrediction initial, 
+  public SCPPAscendingKDE(IMaxComplexDist strat, SimpleKDEPrediction initial, 
       Integer numGames, Integer numIterations, AbsCombinatorialProjectAgentV2 agent,
       Set<Set<Integer>> workingTradeables, Set<ITradeable> actualTradeables) {
     this.strat = strat; 

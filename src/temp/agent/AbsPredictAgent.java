@@ -1,10 +1,8 @@
 package temp.agent;
 
-
-
 import java.util.List;
 
-import brown.agent.AbsSimpleSealedAgent;
+import brown.agent.AbsLab02Agent;
 import brown.channels.library.AuctionChannel;
 import brown.exceptions.AgentCreationException;
 import brown.logging.Logging;
@@ -19,29 +17,22 @@ import brown.value.valuation.IValuation;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
 
-/**
- * a class of 'smart' agent that uses a maximizer and a predictor. 
- * to implement, extend this agent with another agent that implements
- * onSimpleSealed and onOpenOutcry. Implementation of the agents'
- * core logic should be left to maximizers and predictors.
- * @author andrew
- *
- */
-public abstract class MaxPredictAgent extends AbsSimpleSealedAgent {
+public abstract class AbsPredictAgent extends AbsLab02Agent {
 
   protected List<ITradeable> tradeables; 
   protected IValuation valuation;
   protected IValuationDistribution vDistribution; 
   protected IMaximizer maximizer; 
   protected IPredictor predictor; 
-  
-  public MaxPredictAgent(String host, int port, ISetup gameSetup)
+
+  public AbsPredictAgent(String host, int port, ISetup gameSetup)
       throws AgentCreationException {
     super(host, port, gameSetup);
+    // TODO Auto-generated constructor stub
   }
-
+  
   public abstract void onSimpleSealed(AuctionChannel channel); 
-     
+  
   @Override
   public void onPrivateInformation(PrivateInformationMessage privateInfo) {   
     if (privateInfo instanceof ValuationInformationMessage) {
@@ -66,6 +57,8 @@ public abstract class MaxPredictAgent extends AbsSimpleSealedAgent {
   public void onGameReport(GameReportMessage gameReport) {
     Logging.log("Game report received");
   }
-
-
+  
+  
+  
+  
 }

@@ -15,7 +15,7 @@ import temp.histograms.KDE;
 import temp.maximizers.library.FavoriteBundleBid;
 import temp.maximizers.library.LocalBidComplexKDE;
 import temp.predictions.library.SimpleKDEPrediction;
-import temp.predictors.library.SCPPKDE;
+import temp.predictors.library.SCPPAscendingKDE;
 
 public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
 
@@ -79,7 +79,7 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
     SimpleKDEPrediction initialPrediction = new SimpleKDEPrediction(testBundle, initialKernelDensity);
     // strategy for SCPP playing self.
     FavoriteBundleBid dummyAgentStrategy = new FavoriteBundleBid(this, testBundlePowerSet); 
-    SCPPKDE predictionOptimizer = new SCPPKDE(dummyAgentStrategy, initialPrediction, 6, 6, this, testBundlePowerSet, testBundle);
+    SCPPAscendingKDE predictionOptimizer = new SCPPAscendingKDE(dummyAgentStrategy, initialPrediction, 6, 6, this, testBundlePowerSet, testBundle);
     SimpleKDEPrediction kdePred = (SimpleKDEPrediction) predictionOptimizer.getPrediction();
     System.out.println(kdePred.getPrediction(testBundle).rep.rep.getObservations());
     //localbid.

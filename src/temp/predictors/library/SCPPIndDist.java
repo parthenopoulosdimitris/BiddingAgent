@@ -1,6 +1,8 @@
 package temp.predictors.library;
 
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,8 +34,9 @@ public class SCPPIndDist implements IDistributionPredictor {
   private Integer SIMPLAYERS = 10; 
   
   private Double MIN = 0.0;
-  private Double MAX = 1.0;
-  private Integer BINS = 100; 
+  private Map<ITradeable, Double> MAX;
+  private Integer BINS = 10; 
+  private List<ITradeable> tradeableList;
   
   public SCPPIndDist(IMaxDist strat, Integer numGoods, 
       Integer numGames, Integer numIterations, Double pdThresh, AdditiveValuationDistribution sampling) {
@@ -43,9 +46,34 @@ public class SCPPIndDist implements IDistributionPredictor {
     this.pdThresh = pdThresh; 
     this.samplingDist = sampling; 
     Map<ITradeable, IndDist> initPred = new HashMap<ITradeable, IndDist>();
+    // populate an initial histogram
+    // calibrate
+    this.MAX = new HashMap<ITradeable, Double>(); 
+    this.tradeableList = new LinkedList<ITradeable>(); 
     for (int i = 0; i < numGoods; i++) {
-      initPred.put(new SimpleTradeable(i), new IndDist(new IndependentHistogram(MIN, MAX, BINS)));
+      tradeableList.add(new SimpleTradeable(i)); 
     }
+    for (int i = 0; i < 10000; i++) { 
+      IValuation sampleValuation = this.samplingDist.sample();
+      for(int j = 0; j < numGoods; j++) {
+        double aVal = sampleValuation.getValuation(tradeableList.get(j)); 
+        if (MAX.containsKey(tradeableList.get(j))) {
+          if (aVal > MAX.get(tradeableList.get(j))) {
+            MAX.put(tradeableList.get(j), aVal); 
+          }
+        } else {
+          MAX.put(tradeableList.get(j), aVal);
+        }
+      }
+    }
+    // populate histogram
+    IValuation initialValuation = this.samplingDist.sample();
+    for (int i = 0; i < numGoods; i++) {
+      IndependentHistogram ini = new IndependentHistogram(MIN, MAX.get(tradeableList.get(i)), BINS); 
+      ini.increment(initialValuation.getValuation(new SimpleTradeable(i)));
+      initPred.put(new SimpleTradeable(i), new IndDist(ini));
+    }
+    System.out.println(initPred);
     this.initial = new SimpleIndPrediction(initPred);
   }
 
@@ -56,6 +84,7 @@ public class SCPPIndDist implements IDistributionPredictor {
     Boolean withinThreshold = true; 
     int iterCount = 0; 
     for(int i = 0; i < numIterations; i++) {
+      System.out.println(i);
       SimpleIndPrediction aGuess = this.playSelf(this.SIMPLAYERS, returnPrediction);
       Map<ITradeable, IndDist> guessMap = aGuess.getPrediction(initGoods).rep;
       Map<ITradeable, IndDist> initMap = returnPrediction.getPrediction(initGoods).rep;
@@ -77,7 +106,7 @@ public class SCPPIndDist implements IDistributionPredictor {
         }
       }
       if (withinThreshold) {
-        System.out.println("GUESS: " + aGuess.getPrediction(initGoods).rep);
+        //System.out.println("GUESS: " + aGuess.getPrediction(initGoods).rep);
         return aGuess;
       }
       Double decay = (((double) numIterations) - iterCount + 1.0) / ((double) numIterations);
@@ -95,6 +124,7 @@ public class SCPPIndDist implements IDistributionPredictor {
       }
       iterCount++;
     } 
+    System.out.println(returnVector);
     return new SimpleIndPrediction(returnVector);
   }
 
@@ -105,10 +135,12 @@ public class SCPPIndDist implements IDistributionPredictor {
     Map<ITradeable, IndDist> guess = new HashMap<ITradeable, IndDist>(); 
     //populate guess
     Map<ITradeable, IndDist> goods = aPrediction.getPrediction(aPrediction.getGoods()).rep;
+    //System.out.println("GOODS:" + goods.keySet());
     for(ITradeable t : goods.keySet()) {
       IndependentHistogram possiblePrices = 
-          new IndependentHistogram(MIN, MAX, BINS);
+          new IndependentHistogram(MIN, MAX.get(t), BINS);
       guess.put(t, new IndDist(possiblePrices));
+      //System.out.println("C");
       currentHighest.put(t, 0.0);
     }
     //play self.
@@ -122,7 +154,11 @@ public class SCPPIndDist implements IDistributionPredictor {
           vals.put(t, aVal.getValuation(t)); 
         }
         // use the bidding strategy.
+        // problem is with the strategy
+        //System.out.println("VALS: " + vals);
         Map<ITradeable, Double> aBid = strat.getBids(vals, aPrediction);
+        //System.out.println("A BID: " + aBid);
+        //System.out.println("CURRENT HIGHEST: " + currentHighest);
         for(ITradeable t : aBid.keySet()) {
           if (currentHighest.get(t) < aBid.get(t))
             currentHighest.put(t, aBid.get(t));
@@ -132,11 +168,16 @@ public class SCPPIndDist implements IDistributionPredictor {
       for(ITradeable t : currentHighest.keySet()) {
         IndependentHistogram corresponding = guess.get(t).rep;
         corresponding.increment(currentHighest.get(t));
+        //System.out.println("CURRENT HIGHEST" + currentHighest.get(t));
+        //System.out.println("CORRESPONDING: " + corresponding);
         guess.put(t, new IndDist(corresponding));
       } 
-      currentHighest.clear();
+      for(ITradeable t : goods.keySet()) {
+        currentHighest.put(t, 0.0);
+      }
     }
-    System.out.println("PLAYING SELF: " + guess);
+    //System.out.println("PLAYING SELF: " + guess);
+    
     return new SimpleIndPrediction(guess);
   } 
 }

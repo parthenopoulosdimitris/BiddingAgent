@@ -28,7 +28,7 @@ import brown.value.distribution.library.AdditiveValuationDistribution;
  * @author andrew
  *
  */
-public class SCPPPointAgent extends MaxPredictAgent {
+public class SCPPPointAgent extends AbsPredictAgent {
 
   public SCPPPointAgent(String host, int port, ISetup gameSetup) throws AgentCreationException {
     super(host, port, gameSetup);

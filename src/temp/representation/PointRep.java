@@ -12,4 +12,11 @@ public class PointRep extends APriceRep {
   public PointRep(Map<ITradeable, Price> rep) {
     this.rep = rep; 
   }
+
+  @Override
+  public String toString() {
+    return "PointRep [rep=" + rep + "]";
+  }
+  
+  
 }

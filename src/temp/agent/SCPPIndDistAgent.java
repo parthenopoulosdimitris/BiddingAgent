@@ -32,7 +32,7 @@ import brown.value.distribution.library.AdditiveValuationDistribution;
  * @author andrew
  *
  */
-public class SCPPIndDistAgent extends MaxPredictAgent {
+public class SCPPIndDistAgent extends AbsPredictAgent {
 
   public SCPPIndDistAgent(String host, int port, ISetup gameSetup)
       throws AgentCreationException {
@@ -43,12 +43,13 @@ public class SCPPIndDistAgent extends MaxPredictAgent {
   public void onSimpleSealed(AuctionChannel channel) {
     IDistributionPrediction indDistPrediction = ((SCPPIndDist) this.predictor).getPrediction(); 
     // we're gonna want to capture the mean prediction 
-    PointRep rep =  (PointRep) indDistPrediction.getMeanPrediction(new HashSet<ITradeable>(this.tradeables)); 
-    System.out.println("SCPP Prediction: " + rep.rep);
+    //PointRep rep =  (PointRep) indDistPrediction.getMeanPrediction(new HashSet<ITradeable>(this.tradeables)); 
+    //System.out.println("SCPP Prediction: " + rep.rep);
     Map<ITradeable, Double> valuations  = new HashMap<ITradeable, Double>();
     for (ITradeable t : this.tradeables) {
       valuations.put(t, this.valuation.getValuation(t));
     }
+    //System.out.println("VALUATIONS: " + valuations);
     Map<ITradeable, Double> bid = ((IMaxDist) this.maximizer).getBids(valuations, indDistPrediction);
     // more annoying conversion
     Map<ITradeable, BidType> returnMap = new HashMap<ITradeable, BidType>();

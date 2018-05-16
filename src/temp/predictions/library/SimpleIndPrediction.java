@@ -32,7 +32,7 @@ public class SimpleIndPrediction implements IDistributionPrediction {
     Map<ITradeable, IndependentHistogram> predictions = new HashMap<ITradeable, IndependentHistogram>();
     for (ITradeable good : goods) {
       IndependentHistogram aHist = prediction.get(good).rep;
-      predictions.put(good, aHist); 
+      predictions.put(good, aHist);
     }
     Map<ITradeable, Price> returnRep = new HashMap<ITradeable, Price>();
     // get the mean price over the whole histogram.

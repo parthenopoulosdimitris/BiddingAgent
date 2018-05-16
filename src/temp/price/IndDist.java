@@ -11,8 +11,14 @@ import temp.histograms.IndependentHistogram;
 public class IndDist {
   
   public final IndependentHistogram rep;
-  
+
   public IndDist(IndependentHistogram dist) {
     this.rep = dist; 
   }
+  
+  @Override
+  public String toString() {
+    return "IndDist [rep=" + rep + "]";
+  }
+  
 }

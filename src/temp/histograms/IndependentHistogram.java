@@ -8,7 +8,7 @@ import java.util.concurrent.ThreadLocalRandom;
  * the bins implementation may cause errors.
  */
 public class IndependentHistogram implements IHistogram {
-  
+
   private Double minimumValue; 
   private Double maximumValue; 
   private Double binSize;
@@ -31,12 +31,12 @@ public class IndependentHistogram implements IHistogram {
   public void increment(Double value) {
     Integer binLocation;
     //TODO: need to normalize. 
-    System.out.println("INCREMENT TRYING TO OCCUR");
+    //System.out.println("INCREMENT TRYING TO OCCUR");
       if(value > minimumValue && value < maximumValue) {
         binLocation = (int) (value / this.binSize);
         Integer val = bins.get(binLocation);
         bins.put(binLocation, val + 1);
-        System.out.println("INCREMENT OCCURING");
+        //System.out.println("INCREMENT OCCURING");
       }
     }
   
@@ -72,10 +72,14 @@ public class IndependentHistogram implements IHistogram {
     int totalBins = 0; 
     for (int i = 0; i < this.bins.size(); i++) { 
       totalBins += this.bins.get(i);
-      totalCount += ((double) this.bins.get(i)) * runningBinAmt + midBin; 
+      totalCount += ((double) this.bins.get(i)) * (runningBinAmt + midBin); 
       runningBinAmt += this.binSize;
     }
-    return totalCount / ((double) totalBins); 
+    if (totalBins > 0) {
+      return totalCount / ((double) totalBins); 
+    } else {
+      return 0.0; 
+    }
   }
   
   /**
@@ -99,4 +103,12 @@ public class IndependentHistogram implements IHistogram {
     // should never happen. 
     return 0.0; 
   }
+  
+  @Override
+  public String toString() {
+    return "IndependentHistogram [minimumValue=" + minimumValue
+        + ", maximumValue=" + maximumValue + ", binSize=" + binSize
+        + ", numBins=" + numBins + ", bins=" + bins + "]";
+  }
+  
 }
