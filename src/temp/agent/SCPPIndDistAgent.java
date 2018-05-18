@@ -68,7 +68,7 @@ public class SCPPIndDistAgent extends AbsPredictAgent {
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
       this.maximizer = new TargetPriceDist(); 
-      this.predictor = new SCPPIndDist((IMaxDist) this.maximizer, this.tradeables.size(), 100, 100, 0.05, 
+      this.predictor = new SCPPIndDist((IMaxDist) this.maximizer, this.tradeables.size(), 
           (AdditiveValuationDistribution) this.vDistribution); 
       for (ITradeable t: this.tradeables) {
         Logging.log("Agent " + this.ID + ", Good: " + t.toString() + ", Value: " +this.valuation.getValuation(t));
