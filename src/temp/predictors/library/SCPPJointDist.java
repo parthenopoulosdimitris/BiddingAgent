@@ -4,8 +4,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
+import brown.user.agent.library.AbsCombinatorialProjectAgentV2;
 import temp.histograms.JointHistogram;
 import temp.maximizers.IMaxDist;
 import temp.predictions.IDistributionPrediction;

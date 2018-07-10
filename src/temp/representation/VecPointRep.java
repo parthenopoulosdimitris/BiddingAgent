@@ -3,7 +3,7 @@ package temp.representation;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.price.Price;
 
 public class VecPointRep extends APriceRep {

@@ -10,11 +10,11 @@ import org.spectrumauctions.sats.core.model.mrvm.MRVMLicense;
 import org.spectrumauctions.sats.opt.model.mrvm.demandquery.MRVMDemandQueryMipResult;
 import org.spectrumauctions.sats.opt.model.mrvm.demandquery.MRVM_DemandQueryMIP;
 
+import brown.user.agent.library.AbsCombinatorialProjectAgentV2;
+import brown.user.agent.library.T1CombAgent;
+
 import java.util.Set;
 
-import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.agent.library.T1CombAgent;
-import brown.exceptions.AgentCreationException;
 
 public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
   
@@ -22,7 +22,7 @@ public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
   private Set<Integer> bundle = new HashSet<Integer>();
   private double bundleValue;
 
-  public FinalProjectBetaAgent(String host, int port, String name) throws AgentCreationException {
+  public FinalProjectBetaAgent(String host, int port, String name) {
     super(host, port, name);
   }
 
@@ -93,7 +93,7 @@ public class FinalProjectBetaAgent extends AbsCombinatorialProjectAgentV2 {
     return returnMap; 
   }
   
-  public static void main(String[] args) throws AgentCreationException {
+  public static void main(String[] args) {
     new FinalProjectBetaAgent("localhost", 2121, "agent1");
     new T1CombAgent("localhost", 2121, "agent2"); 
     new T1CombAgent("localhost", 2121, "agent3"); 

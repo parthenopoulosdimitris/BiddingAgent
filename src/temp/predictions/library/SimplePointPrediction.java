@@ -3,7 +3,7 @@ package temp.predictions.library;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.predictions.IPointPrediction;
 import temp.price.Price;
 import temp.representation.PointRep;

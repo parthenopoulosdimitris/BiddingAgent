@@ -2,7 +2,7 @@ package temp.predictions;
 
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.representation.APriceRep;
 
 public interface IPricePrediction {

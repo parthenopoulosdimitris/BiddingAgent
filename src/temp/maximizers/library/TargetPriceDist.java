@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.maximizers.IMaxDist;
 import temp.predictions.IDistributionPrediction;
 import temp.price.Price;
@@ -33,6 +33,8 @@ public class TargetPriceDist implements IMaxDist {
      //System.out.println(valuations.get(item.getKey()));
      if (item.getValue().rep <= valuations.get(item.getKey())) { 
        returnMap.put(item.getKey(), item.getValue().rep); 
+     } else{ 
+       returnMap.put(item.getKey(), 0.0);
      }
    }
    //System.out.println("RETURN MAP: " + returnMap);

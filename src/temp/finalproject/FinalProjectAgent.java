@@ -7,10 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.exceptions.AgentCreationException;
-import brown.tradeable.ITradeable;
-import brown.tradeable.library.SimpleTradeable;
+import brown.mechanism.tradeable.ITradeable;
+import brown.mechanism.tradeable.library.SimpleTradeable;
+import brown.user.agent.library.AbsCombinatorialProjectAgentV2;
 import temp.histograms.KDE;
 import temp.maximizers.library.FavoriteBundleBid;
 import temp.maximizers.library.LocalBidComplexKDE;
@@ -26,8 +25,7 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
   private double bundleValue = 0;
   private Map<Set<Integer>, Double> valuation = new HashMap<>();
   
-  public FinalProjectAgent(String host, int port, String name)
-      throws AgentCreationException {
+  public FinalProjectAgent(String host, int port, String name) {
     super(host, port, name);
   }
 
@@ -119,7 +117,7 @@ public class FinalProjectAgent extends AbsCombinatorialProjectAgentV2 {
     bundleValue = 0;
   }
 
-  public static void main(String[] args) throws AgentCreationException {
+  public static void main(String[] args) {
     new FinalProjectAgent("localhost", 2121, "agent1");
 //    new T1CombAgent("localhost", 2121, "agent2");
 //    new T1CombAgent("localhost", 2121, "agent3");

@@ -2,7 +2,7 @@ package temp.representation;
 
 import java.util.Map;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.price.Price;
 
 public class PointRep extends APriceRep {

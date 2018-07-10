@@ -2,7 +2,7 @@ package temp.predictions.library;
 
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.predictions.IDistributionPrediction;
 import temp.price.JointDist;
 import temp.representation.JointRep;

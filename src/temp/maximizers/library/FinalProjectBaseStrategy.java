@@ -4,7 +4,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.maximizers.IMaxComplexDist;
 import temp.predictions.IDistributionPrediction;
 import temp.price.Price;

@@ -3,7 +3,7 @@ package temp.maximizers.library;
 import java.util.HashMap;
 import java.util.Map;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.maximizers.IMaxPoint;
 import temp.predictions.IPointPrediction;
 import temp.price.Price;

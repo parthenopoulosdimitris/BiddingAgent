@@ -1,6 +1,6 @@
 package temp.finalproject;
 
-import brown.server.library.CombAuctionServer;
+import brown.user.server.CombAuctionServer;
 
 public class CombAuctionServerTemplate {
   private static int initDelay = 5;  // time to wait before beginning the simulation

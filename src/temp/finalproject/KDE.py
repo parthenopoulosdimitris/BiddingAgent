@@ -7,7 +7,9 @@ def estimate():
 	samples = kde.sample()
 
 def main(): 
-	 question_two()
+	##we want elements as a list. 
+	for arg in sys.argv[1:]:
+	question_two()
 
 if __name__ == '__main__': 
 	main()

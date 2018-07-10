@@ -2,7 +2,7 @@ package temp.maximizers;
 
 import java.util.Map;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.predictions.IDistributionPrediction;
 
 public interface IMaxDist extends IMaximizer {

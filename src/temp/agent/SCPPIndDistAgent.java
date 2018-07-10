@@ -1,30 +1,25 @@
 package temp.agent; 
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import brown.auction.value.distribution.library.AdditiveValuationDistribution;
+import brown.logging.library.Logging;
+import brown.mechanism.bid.library.BidType;
+import brown.mechanism.bidbundle.library.AuctionBidBundle;
+import brown.mechanism.channel.library.SealedBidChannel;
+import brown.mechanism.tradeable.ITradeable;
+import brown.platform.messages.library.PrivateInformationMessage;
+import brown.platform.messages.library.ValuationInformationMessage;
+import brown.system.setup.ISetup;
+import brown.system.setup.library.SSSPSetup;
 import temp.maximizers.IMaxDist;
-import temp.maximizers.IMaxPoint;
-import temp.maximizers.library.TargetPrice;
+import temp.maximizers.library.LocalBidIndDist;
 import temp.maximizers.library.TargetPriceDist;
 import temp.predictions.IDistributionPrediction;
 import temp.predictors.library.SCPPIndDist;
-import temp.price.Price;
-import temp.representation.IndRep;
-import temp.representation.PointRep;
-import brown.bid.interim.BidType;
-import brown.bidbundle.library.AuctionBidBundle;
-import brown.channels.library.AuctionChannel;
-import brown.exceptions.AgentCreationException;
-import brown.logging.Logging;
-import brown.messages.library.PrivateInformationMessage;
-import brown.messages.library.ValuationInformationMessage;
-import brown.setup.ISetup;
-import brown.setup.library.SSSPSetup;
-import brown.tradeable.ITradeable;
-import brown.value.distribution.library.AdditiveValuationDistribution;
+
 
 /**
  * SCPP ind dist agent produces self-confirming price predictions stored as 
@@ -34,13 +29,12 @@ import brown.value.distribution.library.AdditiveValuationDistribution;
  */
 public class SCPPIndDistAgent extends AbsPredictAgent {
 
-  public SCPPIndDistAgent(String host, int port, ISetup gameSetup)
-      throws AgentCreationException {
+  public SCPPIndDistAgent(String host, int port, ISetup gameSetup) {
     super(host, port, gameSetup);
   }
 
   @Override
-  public void onSimpleSealed(AuctionChannel channel) {
+  public void onSimpleSealed(SealedBidChannel channel) {
     IDistributionPrediction indDistPrediction = ((SCPPIndDist) this.predictor).getPrediction(); 
     // we're gonna want to capture the mean prediction 
     //PointRep rep =  (PointRep) indDistPrediction.getMeanPrediction(new HashSet<ITradeable>(this.tradeables)); 
@@ -67,7 +61,7 @@ public class SCPPIndDistAgent extends AbsPredictAgent {
       this.tradeables = ((ValuationInformationMessage) privateInfo).getTradeables();
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
-      this.maximizer = new TargetPriceDist(); 
+      this.maximizer = new LocalBidIndDist(new TargetPriceDist()); 
       this.predictor = new SCPPIndDist((IMaxDist) this.maximizer, this.tradeables.size(), 
           (AdditiveValuationDistribution) this.vDistribution); 
       for (ITradeable t: this.tradeables) {
@@ -78,7 +72,7 @@ public class SCPPIndDistAgent extends AbsPredictAgent {
     }
   } 
   
-  public static void main(String[] args) throws AgentCreationException {
+  public static void main(String[] args) {
     // predictor and maximizer rely on private information.
     new SCPPIndDistAgent("localhost", 2121, new SSSPSetup()); 
     while(true){}

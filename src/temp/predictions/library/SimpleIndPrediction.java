@@ -5,7 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.histograms.IndependentHistogram;
 import temp.predictions.IDistributionPrediction;
 import temp.price.IndDist;

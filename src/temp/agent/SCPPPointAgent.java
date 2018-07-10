@@ -1,26 +1,23 @@
 package temp.agent; 
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import brown.auction.value.distribution.library.AdditiveValuationDistribution;
+import brown.logging.library.Logging;
+import brown.mechanism.bid.library.BidType;
+import brown.mechanism.bidbundle.library.AuctionBidBundle;
+import brown.mechanism.channel.library.SealedBidChannel;
+import brown.mechanism.tradeable.ITradeable;
+import brown.platform.messages.library.PrivateInformationMessage;
+import brown.platform.messages.library.ValuationInformationMessage;
+import brown.system.setup.ISetup;
+import brown.system.setup.library.SSSPSetup;
 import temp.maximizers.IMaxPoint;
 import temp.maximizers.library.TargetPrice;
 import temp.predictions.IPointPrediction;
 import temp.predictors.library.SCPPPoint;
-import temp.representation.PointRep;
-import brown.bid.interim.BidType;
-import brown.bidbundle.library.AuctionBidBundle;
-import brown.channels.library.AuctionChannel;
-import brown.exceptions.AgentCreationException;
-import brown.logging.Logging;
-import brown.messages.library.PrivateInformationMessage;
-import brown.messages.library.ValuationInformationMessage;
-import brown.setup.ISetup;
-import brown.setup.library.SSSPSetup;
-import brown.tradeable.ITradeable;
-import brown.value.distribution.library.AdditiveValuationDistribution;
 
 /**
  * SCPP Point Agent uses SCPP to find point predicitons for 
@@ -30,12 +27,12 @@ import brown.value.distribution.library.AdditiveValuationDistribution;
  */
 public class SCPPPointAgent extends AbsPredictAgent {
 
-  public SCPPPointAgent(String host, int port, ISetup gameSetup) throws AgentCreationException {
+  public SCPPPointAgent(String host, int port, ISetup gameSetup) {
     super(host, port, gameSetup);
   }
 
   @Override
-  public void onSimpleSealed(AuctionChannel channel) {
+  public void onSimpleSealed(SealedBidChannel channel) {
   // 1. generate good price predictions
   // 2. bid accordingly
   // 1. 
@@ -80,7 +77,7 @@ public class SCPPPointAgent extends AbsPredictAgent {
     }
   } 
   
-  public static void main(String[] args) throws AgentCreationException {
+  public static void main(String[] args) {
       // predictor and maximizer rely on private information.
       new SCPPPointAgent("localhost", 2121, new SSSPSetup()); 
       while(true){}

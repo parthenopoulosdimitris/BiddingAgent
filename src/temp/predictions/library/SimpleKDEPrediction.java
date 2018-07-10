@@ -3,7 +3,7 @@ package temp.predictions.library;
 import java.io.IOException;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.histograms.KDE;
 import temp.predictions.IDistributionPrediction;
 import temp.price.JointDistKDE;

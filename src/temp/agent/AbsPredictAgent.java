@@ -2,18 +2,17 @@ package temp.agent;
 
 import java.util.List;
 
-import brown.agent.AbsLab02Agent;
-import brown.channels.library.AuctionChannel;
-import brown.exceptions.AgentCreationException;
-import brown.logging.Logging;
-import brown.messages.library.BankUpdateMessage;
-import brown.messages.library.GameReportMessage;
-import brown.messages.library.PrivateInformationMessage;
-import brown.messages.library.ValuationInformationMessage;
-import brown.setup.ISetup;
-import brown.tradeable.ITradeable;
-import brown.value.distribution.IValuationDistribution;
-import brown.value.valuation.IValuation;
+import brown.auction.value.distribution.IValuationDistribution;
+import brown.auction.value.valuation.IValuation;
+import brown.logging.library.Logging;
+import brown.mechanism.channel.library.SealedBidChannel;
+import brown.mechanism.tradeable.ITradeable;
+import brown.platform.messages.library.BankUpdateMessage;
+import brown.platform.messages.library.GameReportMessage;
+import brown.platform.messages.library.PrivateInformationMessage;
+import brown.platform.messages.library.ValuationInformationMessage;
+import brown.system.setup.ISetup;
+import brown.user.agent.library.AbsLab02Agent;
 import temp.maximizers.IMaximizer;
 import temp.predictors.IPredictor;
 
@@ -25,13 +24,12 @@ public abstract class AbsPredictAgent extends AbsLab02Agent {
   protected IMaximizer maximizer; 
   protected IPredictor predictor; 
 
-  public AbsPredictAgent(String host, int port, ISetup gameSetup)
-      throws AgentCreationException {
+  public AbsPredictAgent(String host, int port, ISetup gameSetup) {
     super(host, port, gameSetup);
     // TODO Auto-generated constructor stub
   }
   
-  public abstract void onSimpleSealed(AuctionChannel channel); 
+  public abstract void onSimpleSealed(SealedBidChannel channel); 
   
   @Override
   public void onPrivateInformation(PrivateInformationMessage privateInfo) {   

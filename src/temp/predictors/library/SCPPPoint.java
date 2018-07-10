@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
-import brown.tradeable.library.SimpleTradeable;
-import brown.value.distribution.library.AdditiveValuationDistribution;
-import brown.value.valuation.IValuation;
+import brown.auction.value.distribution.library.AdditiveValuationDistribution;
+import brown.auction.value.valuation.IValuation;
+import brown.mechanism.tradeable.ITradeable;
+import brown.mechanism.tradeable.library.SimpleTradeable;
 import temp.maximizers.IMaxPoint;
 import temp.predictions.library.SimplePointPrediction;
 import temp.predictors.IPointPredictor;

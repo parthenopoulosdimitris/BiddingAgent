@@ -13,7 +13,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/jars/sats-0.6.1-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/TP_5_4.jar"/>
-	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/jars/kryonet-2.21-all.jar"/>
+	<classpathentry kind="lib" path="/Users/andrew/Documents/workspace/TP_6_0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

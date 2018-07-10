@@ -3,7 +3,7 @@ package temp.bidstrategies;
 import java.util.Map;
 import java.util.Set;
 
-import brown.tradeable.ITradeable;
+import brown.mechanism.tradeable.ITradeable;
 import temp.predictions.IPricePrediction;
 //TODO: a bid strategy is a maximizer.
 

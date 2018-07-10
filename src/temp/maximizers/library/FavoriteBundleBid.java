@@ -4,12 +4,14 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import brown.mechanism.tradeable.ITradeable;
+import brown.mechanism.tradeable.library.ComplexTradeable;
+import brown.mechanism.tradeable.library.SimpleTradeable;
+import brown.user.agent.library.AbsCombinatorialProjectAgentV2;
+
 import java.util.Map.Entry;
 
-import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.tradeable.ITradeable;
-import brown.tradeable.library.ComplexTradeable;
-import brown.tradeable.library.SimpleTradeable;
 import temp.maximizers.IMaxComplexDist;
 import temp.predictions.IDistributionPrediction;
 

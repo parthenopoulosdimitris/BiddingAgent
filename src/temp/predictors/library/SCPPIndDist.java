@@ -7,12 +7,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import brown.agent.AbsCombinatorialProjectAgentV2;
-import brown.tradeable.ITradeable;
-import brown.tradeable.library.SimpleTradeable;
-import brown.value.distribution.library.AdditiveValuationDistribution;
-import brown.value.valuation.IValuation;
-import brown.value.valuation.library.AdditiveValuation;
+import brown.auction.value.distribution.library.AdditiveValuationDistribution;
+import brown.auction.value.valuation.IValuation;
+import brown.auction.value.valuation.library.AdditiveValuation;
+import brown.mechanism.tradeable.ITradeable;
+import brown.mechanism.tradeable.library.SimpleTradeable;
+import brown.user.agent.library.AbsCombinatorialProjectAgentV2;
 import temp.histograms.IndependentHistogram;
 import temp.maximizers.IMaxDist;
 import temp.predictions.library.SimpleIndPrediction;
@@ -40,8 +40,8 @@ public class SCPPIndDist implements IDistributionPredictor {
   private Integer BINS = 10; 
   private Integer SIMPLAYERS = 10;
   private Double PDTHRESH = 0.05;
-  private Integer NUMGAMES = 100;
-  private Integer NUMITERATIONS = 100; 
+  private Integer NUMGAMES = 1;
+  private Integer NUMITERATIONS = 1; 
   
   public SCPPIndDist(IMaxDist strat, Integer numGoods, AdditiveValuationDistribution sampling) {
     this.strat = strat; 
@@ -65,12 +65,24 @@ public class SCPPIndDist implements IDistributionPredictor {
     // calibrate
     this.max = new HashMap<ITradeable, Double>(); 
     this.tradeableList = new LinkedList<ITradeable>(); 
-    for (int i = 0; i < numGoods; i++) {
+    for (int i = 1; i <= numGoods; i++) {
       tradeableList.add(new SimpleTradeable(i)); 
     }
-    for (int i = 0; i < 10000; i++) { 
-      IValuation sampleValuation = this.samplingDist.sample();
+    for (int i = 0; i < 1; i++) { 
+      IValuation sampleValuation;
+      if (!specValuation) {
+        sampleValuation = this.samplingDist.sample();
+      } else {
+        Map<SimpleTradeable, Double> trimmedValuationMap = new HashMap<SimpleTradeable, Double>(); 
+        for (int k = 1; k <= 98; k++) {
+          Set<Integer> individualGood = new HashSet<Integer>(); 
+          individualGood.add(k);
+          trimmedValuationMap.put(new SimpleTradeable(k), agent.sampleValue(individualGood));
+        }
+        sampleValuation = new AdditiveValuation(trimmedValuationMap);
+      }
       for(int j = 0; j < numGoods; j++) {
+        System.out.println(j);
         double aVal = sampleValuation.getValuation(tradeableList.get(j)); 
         if (max.containsKey(tradeableList.get(j))) {
           if (aVal > max.get(tradeableList.get(j))) {
@@ -82,9 +94,20 @@ public class SCPPIndDist implements IDistributionPredictor {
       }
     }
     // populate histogram
-    IValuation initialValuation = this.samplingDist.sample();
-    for (int i = 0; i < numGoods; i++) {
-      IndependentHistogram ini = new IndependentHistogram(MIN, max.get(tradeableList.get(i)), BINS); 
+    IValuation initialValuation;
+    if (!specValuation) { 
+      initialValuation = this.samplingDist.sample();
+    } else {
+      Map<SimpleTradeable, Double> trimmedValuationMap = new HashMap<SimpleTradeable, Double>(); 
+      for (int k = 1; k <= 98; k++) {
+        Set<Integer> individualGood = new HashSet<Integer>(); 
+        individualGood.add(k);
+        trimmedValuationMap.put(new SimpleTradeable(k), agent.sampleValue(individualGood));
+      }
+      initialValuation = new AdditiveValuation(trimmedValuationMap);
+    }
+    for (int i = 1; i <= numGoods; i++) {
+      IndependentHistogram ini = new IndependentHistogram(MIN, max.get(tradeableList.get(i - 1)), BINS); 
       ini.increment(initialValuation.getValuation(new SimpleTradeable(i)));
       initPred.put(new SimpleTradeable(i), new IndDist(ini));
     }
@@ -146,12 +169,11 @@ public class SCPPIndDist implements IDistributionPredictor {
     Map<ITradeable, IndDist> guess = new HashMap<ITradeable, IndDist>(); 
     //populate guess
     Map<ITradeable, IndDist> goods = aPrediction.getPrediction(aPrediction.getGoods()).rep;
-    //System.out.println("GOODS:" + goods.keySet());
+    System.out.println(goods.keySet());
     for(ITradeable t : goods.keySet()) {
       IndependentHistogram possiblePrices = 
           new IndependentHistogram(MIN, max.get(t), BINS);
       guess.put(t, new IndDist(possiblePrices));
-      //System.out.println("C");
       currentHighest.put(t, 0.0);
     }
     //play self.
