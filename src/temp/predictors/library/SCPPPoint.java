@@ -5,9 +5,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-import brown.auction.value.distribution.library.AdditiveValuationDistribution;
+import brown.auction.value.distribution.IValuationDistribution;
+import brown.auction.value.valuation.IBundleValuation;
 import brown.auction.value.valuation.IValuation;
 import brown.mechanism.tradeable.ITradeable;
+import brown.mechanism.tradeable.library.ComplexTradeable;
 import brown.mechanism.tradeable.library.SimpleTradeable;
 import temp.maximizers.IMaxPoint;
 import temp.predictions.library.SimplePointPrediction;
@@ -23,7 +25,7 @@ public class SCPPPoint implements IPointPredictor {
   private Integer numGames; 
   private Integer numIterations; 
   private Double pdThresh; 
-  private AdditiveValuationDistribution samplingDist;
+  private IValuationDistribution samplingDist;
   private Integer SIMPLAYERS = 8;
   private IMaxPoint strat;
   
@@ -37,7 +39,7 @@ public class SCPPPoint implements IPointPredictor {
    * @param distInfo
    */
   public SCPPPoint(IMaxPoint strat, Integer numGoods, Integer numGames, 
-      Integer numIterations, Double pdThresh, AdditiveValuationDistribution sampling) {
+      Integer numIterations, Double pdThresh, IValuationDistribution sampling) {
     this.strat = strat; 
     this.numGames = numGames;
     this.numIterations = numIterations;  
@@ -46,7 +48,8 @@ public class SCPPPoint implements IPointPredictor {
     Map<ITradeable, Price> initPrediction =  new HashMap<ITradeable, Price>();
     // add to the initial vector.
     for(int i = 0; i < numGoods; i++) {
-      initPrediction.put(new SimpleTradeable(i), new Price(0.0));      
+      // initial prediction is random.
+      initPrediction.put(new SimpleTradeable(i), new Price(Math.random()));      
     }
     this.initial = new SimplePointPrediction(initPrediction); 
   }
@@ -107,13 +110,12 @@ public class SCPPPoint implements IPointPredictor {
       // submit bids for simulated players
       for(int j = 0; j < simPlayers; j++) {
         // get a valuation
-        IValuation val = this.samplingDist.sample(); 
-        Map<ITradeable, Double> valuation = new HashMap<ITradeable, Double>();
-        for (ITradeable t : this.initial.getGoods()) {
-          valuation.put(t, val.getValuation(t)); 
+        IBundleValuation val = (IBundleValuation) this.samplingDist.sample(); 
+        Map<ITradeable, Double> valuations = new HashMap<ITradeable, Double>(); 
+        for (ComplexTradeable t : val.getAllValuations().keySet()) {
+          valuations.put(t, val.getValuation(t)); 
         }
-        // bid according to valuation and strategy
-        Map<ITradeable, Double> aBid = strat.getBids(valuation, aPrediction);
+        Map<ITradeable, Double> aBid = strat.getBids(valuations, aPrediction);
       // record highest bid.
       for(ITradeable t : aBid.keySet()) {
         if (currentHighest.get(t) < aBid.get(t))

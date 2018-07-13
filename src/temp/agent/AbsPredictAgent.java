@@ -29,6 +29,11 @@ public abstract class AbsPredictAgent extends AbsLab02Agent {
     // TODO Auto-generated constructor stub
   }
   
+  public AbsPredictAgent(String host, int port, ISetup gameSetup, String name) {
+    super(host, port, gameSetup, name);
+    // TODO Auto-generated constructor stub
+  }
+  
   public abstract void onSimpleSealed(SealedBidChannel channel); 
   
   @Override

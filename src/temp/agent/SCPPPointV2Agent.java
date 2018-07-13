@@ -15,6 +15,7 @@ import brown.platform.messages.library.PrivateInformationMessage;
 import brown.platform.messages.library.ValuationInformationMessage;
 import brown.system.setup.library.SSSPSetup;
 import temp.maximizers.IMaxPoint;
+import temp.maximizers.library.PointRandom;
 import temp.maximizers.library.TargetPrice;
 import temp.predictions.IPointPrediction;
 import temp.predictors.library.SCPPPoint;
@@ -25,13 +26,13 @@ import temp.predictors.library.SCPPPoint;
  * @author andrew
  *
  */
-public class SCPPPointAgent extends AbsPredictAgent {
+public class SCPPPointV2Agent extends AbsPredictAgent {
 
-  public SCPPPointAgent(String host, int port) {
+  public SCPPPointV2Agent(String host, int port) {
     super(host, port, new SSSPSetup());
   }
   
-  public SCPPPointAgent(String host, int port, String name) {
+  public SCPPPointV2Agent(String host, int port, String name) {
     super(host, port, new SSSPSetup(), name);
   }
 
@@ -51,7 +52,7 @@ public class SCPPPointAgent extends AbsPredictAgent {
   }
   System.out.println("VALUATIONS: " + valuations);
   // 2. 
-  Map<ITradeable, Double> bid = ((IMaxPoint) this.maximizer).getBids(valuations, simplePoint);
+  Map<ITradeable, Double> bid = ((IMaxPoint) new TargetPrice()).getBids(valuations, simplePoint);
   // more annoying conversion
   Map<ITradeable, BidType> bType = new HashMap<ITradeable, BidType>();
   for (Entry<ITradeable, Double> e : bid.entrySet()) {
@@ -71,7 +72,7 @@ public class SCPPPointAgent extends AbsPredictAgent {
       this.tradeables = ((ValuationInformationMessage) privateInfo).getTradeables();
       this.valuation = ((ValuationInformationMessage) privateInfo).getPrivateValuation();
       this.vDistribution = ((ValuationInformationMessage) privateInfo).getAllValuations();
-      this.maximizer = new TargetPrice(); 
+      this.maximizer = new PointRandom(); 
       this.predictor = new SCPPPoint((IMaxPoint) this.maximizer, this.tradeables.size(), 100, 100, 0.05, 
           this.vDistribution);       
     } else {
@@ -81,7 +82,7 @@ public class SCPPPointAgent extends AbsPredictAgent {
   
   public static void main(String[] args) {
       // predictor and maximizer rely on private information.
-      new SCPPPointAgent("localhost", 2121); 
+      new SCPPPointV2Agent("localhost", 2121); 
       while(true){}
   }
 
